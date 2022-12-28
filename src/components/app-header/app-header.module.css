@@ -1,0 +1,38 @@
+.header {
+    display: flex;
+    background: #1C1C21;
+    box-shadow: 0 24px 32px rgba(0, 0, 0, 0.04),
+                0 16px 24px rgba(0, 0, 0, 0.04),
+                0 4px 8px rgba(0, 0, 0, 0.04),
+                0 0 1px rgba(0, 0, 0, 0.04);
+    justify-content: space-between;
+    white-space: nowrap;
+}
+
+.logo {
+    align-items: center;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.menu {
+    flex: 1;
+}
+
+.menu ul {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0;
+    padding: 0;
+}
+
+.menu:last-child ul {
+    justify-content: flex-end;
+}
+
+.menu ul li {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+}

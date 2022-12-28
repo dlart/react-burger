@@ -1,0 +1,65 @@
+.title {
+    display: block;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 40px;
+}
+
+.tabs {
+    display: flex;
+}
+
+.category {
+}
+
+.category h3 {
+    font-weight: 700;
+    font-size: 24px;
+    line-height: 30px;
+}
+
+.products {
+    display: flex;
+    height: 400px;
+    overflow: scroll;
+}
+
+.products ul {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+}
+
+.products ul li {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-around;
+}
+
+.products ul li .price {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.products ul li .price .amount {
+    font-family: 'Iceland', serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 24px;
+}
+
+.products ul li .name {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+}
+
+.products ul li .price .currency {
+    padding-left: 16px;
+}

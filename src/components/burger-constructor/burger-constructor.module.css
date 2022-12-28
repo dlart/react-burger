@@ -1,0 +1,17 @@
+.burgerConstructor {
+
+}
+
+.burgerConstructor ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+}
+
+.burgerConstructor ul li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
