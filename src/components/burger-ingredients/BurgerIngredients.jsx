@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {CurrencyIcon, Tab} from '@ya.praktikum/react-developer-burger-ui-components';
+import {CurrencyIcon, Tab, Counter} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import data from '../../utils/data';
 
@@ -39,6 +39,7 @@ function BurgerIngredients() {
                         {products.map(({image, name, price}, index) => {
                             return (
                                 <li key={index} className="mb-10">
+                                    <Counter count={1} size="default" extraClass="m-1" />
                                     <img className="" src={image}  alt={name}/>
                                     <span className={[styles.price, 'pt-1'].join(' ')}>
                                         <span className={styles.amount}>
