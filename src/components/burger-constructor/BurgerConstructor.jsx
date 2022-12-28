@@ -1,13 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import styles from './burger-constructor.module.css';
 import data from '../../utils/data';
-import {ConstructorElement, DragIcon} from '@ya.praktikum/react-developer-burger-ui-components';
+import {ConstructorElement, DragIcon, Button, CurrencyIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 
 function BurgerConstructor() {
     const [products, setProducts] = useState([]);
+    const [sum, setSum] = useState(0);
 
     useEffect(() => {
         setProducts(data);
+
+        let sum = 0;
+
+        for (const product of data) {
+            sum += product.price;
+        }
+
+        setSum(sum);
     }, []);
 
     return (
@@ -42,6 +51,13 @@ function BurgerConstructor() {
                     );
                 })}
             </ul>
+            <div className={[styles.total, 'mt-10'].join(' ')}>
+                <span className={[styles.amount, 'mr-2'].join(' ')}>{sum}</span>
+                <CurrencyIcon type="primary" />
+                <Button extraClass="ml-5" htmlType="button" type="primary" size="large">
+                    Оформить заказ
+                </Button>
+            </div>
         </section>
     );
 }
