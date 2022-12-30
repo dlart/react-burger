@@ -38,6 +38,7 @@
     display: block;
     position: relative;
     flex: 1;
+    max-width: 274px;
 }
 
 .price {
