@@ -5,15 +5,18 @@
 .burgerConstructor ul {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin: 0;
-    padding: 0;
+    gap: 16px;
+    height: 368px;
+    margin-left: 0;
+    overflow-y: scroll;
+    padding-left: 0;
 }
 
 .burgerConstructor ul li {
-    display: flex;
-    flex-direction: row;
     align-items: center;
+    display: flex;
+    gap: 4px;
+    flex-direction: row;
 }
 
 .total {
@@ -22,10 +25,9 @@
     justify-content: center;
 }
 
-.total .amount {
-    font-family: 'Iceland', serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 48px;
-    line-height: 36px;
+.totalAmount {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }

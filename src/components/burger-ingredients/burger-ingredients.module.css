@@ -9,58 +9,45 @@
     display: flex;
 }
 
-.category {
-}
-
-.category h3 {
-    font-weight: 700;
-    font-size: 24px;
-    line-height: 30px;
-}
-
-.products {
+.types {
     display: flex;
-    height: 400px;
-    overflow: scroll;
+    flex-direction: column;
+    gap: 40px;
+    height: 563px;
+    overflow-y: scroll;
 }
 
-.products ul {
+.type {
+    display: flex;
+    flex-direction: column;
+}
+
+.typeTitle {
+    display: flex;
+}
+
+.ingredients {
     display: flex;
     flex-wrap: wrap;
-    margin: 0;
+    gap: 24px;
+    justify-content: space-between;
     padding: 0;
 }
 
-.products ul li {
+.ingredient {
+    display: block;
     position: relative;
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    justify-content: space-around;
 }
 
-.products ul li .price {
-    align-items: center;
+.price {
     display: flex;
+    flex-direction: row;
+    align-items: center;
     justify-content: center;
+    gap: 10px;
 }
 
-.products ul li .price .amount {
-    font-family: 'Iceland', serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 28px;
-    line-height: 24px;
-}
-
-.products ul li .name {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 24px;
+.name {
     text-align: center;
-}
-
-.products ul li .price .currency {
-    padding-left: 16px;
 }

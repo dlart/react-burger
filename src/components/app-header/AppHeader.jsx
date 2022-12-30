@@ -9,27 +9,42 @@ import styles from './app-header.module.css';
 
 function AppHeader() {
     return (
-        <header className={[styles.header, 'p-4'].join(' ')}>
-            <nav className={styles.menu}>
+        <header className={`${styles.header} p-4`}>
+            <nav>
                 <ul>
-                    <li className="p-5">
-                        <BurgerIcon type="primary" />
-                        <span className="ml-2">Конструктор</span>
+                    <li className={`${styles.active} p-5`}>
+                        <a href="#">
+                            <BurgerIcon type="primary" />
+                            <span className="ml-2 text text_type_main-default">
+                                Конструктор
+                            </span>
+                        </a>
                     </li>
                     <li className="ml-2 p-5">
-                        <ListIcon type="primary" />
-                        <span className="ml-2">Лента заказов</span>
+                        <a href="#">
+                            <ListIcon type="secondary" />
+                            <span className="ml-2 text text_type_main-default">
+                                Лента заказов
+                            </span>
+                        </a>
                     </li>
                 </ul>
             </nav>
-            <div className={styles.logo}>
+            <a
+                className={styles.logo}
+                href="#"
+            >
                 <Logo />
-            </div>
+            </a>
             <nav className={styles.menu}>
                 <ul>
                     <li className="p-5">
-                        <ProfileIcon type="primary" />
-                        <span className="ml-2">Личный кабинет</span>
+                        <a href="#">
+                            <ProfileIcon type="secondary" />
+                            <span className="ml-2 text text_type_main-default">
+                                Личный кабинет
+                            </span>
+                        </a>
                     </li>
                 </ul>
             </nav>

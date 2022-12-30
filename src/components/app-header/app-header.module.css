@@ -11,28 +11,38 @@
 
 .logo {
     align-items: center;
-    flex: 1;
     display: flex;
+    flex: 1;
     justify-content: center;
 }
 
-.menu {
+.header nav {
     flex: 1;
 }
 
-.menu ul {
+.header nav ul {
     display: flex;
     justify-content: flex-start;
     margin: 0;
     padding: 0;
 }
 
-.menu:last-child ul {
+.header nav:last-child ul {
     justify-content: flex-end;
 }
 
-.menu ul li {
+.header nav ul li {
     align-items: center;
     cursor: pointer;
     display: flex;
+}
+
+.header nav ul li a {
+    color: #8585AD;
+    display: flex;
+    text-decoration: none;
+}
+
+.header nav ul li.active a {
+    color: white;
 }

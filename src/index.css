@@ -1,3 +1,15 @@
-body {
-    font-family: 'Jet Brains Mono', serif;
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #4C4CFF;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5d5dff;
+}
+
+::-webkit-scrollbar-track {
+    background: #8585AD;
 }
