@@ -1,19 +1,9 @@
-import React, {
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
-import {
-    Counter,
-    CurrencyIcon,
-    Tab,
-} from '@ya.praktikum/react-developer-burger-ui-components';
+import React, {useMemo, useState,} from 'react';
+import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import PropTypes from 'prop-types';
 import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
-import ModalOverlay from '../modal-overlay/ModalOverlay';
 import IngredientCard from '../ingredient-card/IngredientCard';
 
 const BUN = 'bun';

@@ -1,14 +1,8 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import PropTypes from 'prop-types';
-import {
-    Button,
-    ConstructorElement,
-    CurrencyIcon,
-    DragIcon,
-} from '@ya.praktikum/react-developer-burger-ui-components';
+import {Button, ConstructorElement, CurrencyIcon, DragIcon,} from '@ya.praktikum/react-developer-burger-ui-components';
 import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import styles from './burger-constructor.module.css';
-import ModalOverlay from '../modal-overlay/ModalOverlay';
 import OrderDetails from '../order-details/OrderDetails';
 
 function BurgerConstructor({ingredients}) {

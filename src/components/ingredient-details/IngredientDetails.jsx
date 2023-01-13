@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Modal from '../modal/Modal';
 import styles from './ingredient-details.module.css';
 import ingredientPropTypes from '../../utils/ingredientPropTypes';

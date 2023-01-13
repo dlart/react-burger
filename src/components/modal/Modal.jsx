@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './modal.module.css';
 import {createPortal} from 'react-dom';
