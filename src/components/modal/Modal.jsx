@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './modal.module.css';
 import {createPortal} from 'react-dom';
@@ -14,15 +14,15 @@ export default function Modal(props) {
         onClose,
     } = props;
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = useCallback((e) => {
         if ('Escape' !== e.code) return;
         onClose();
-    };
+    }, [onClose]);
 
     useEffect(() => {
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [])
+    }, [handleKeyDown]);
 
     return createPortal(
         <ModalOverlay onClose={onClose}>
@@ -31,12 +31,13 @@ export default function Modal(props) {
                     <div className="text text_type_main-large">
                         {title}
                     </div>
-                    <a
-                        href="#"
+                    <button
+                        className={styles.closeBtn}
                         onClick={onClose}
+                        type="button"
                     >
                         <CloseIcon type="primary" />
-                    </a>
+                    </button>
                 </div>
                 <div className={styles.modalContent}>
                     {children}
