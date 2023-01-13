@@ -21,7 +21,7 @@ function BurgerConstructor({ingredients}) {
     );
 
     const firstIngredient = ingredients[0];
-    const lastIngredient = ingredients[ingredients.length + 1];
+    const lastIngredient = ingredients[ingredients.length - 1];
 
     const modal = <OrderDetails
         id={123456}
@@ -42,7 +42,7 @@ function BurgerConstructor({ingredients}) {
                     />
                 }
                 <ul className="mt-4">
-                    {ingredients.map((
+                    {ingredients.slice(1, ingredients.length - 1).map((
                         {
                             image,
                             name,
