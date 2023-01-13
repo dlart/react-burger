@@ -14,15 +14,12 @@ import OrderDetails from '../order-details/OrderDetails';
 function BurgerConstructor({ingredients}) {
     const [open, setOpen] = useState(false);
 
-    const calcTotal = (ingredients) => {
-        let total = 0;
-
-        for (const ingredient of ingredients) {
-            total += ingredient.price;
-        }
-
-        return total;
-    }
+    const calcTotal = (ingredients) => ingredients
+        .map((ingredient) => ingredient.price)
+        .reduce(
+            (previous, current) => previous + current,
+            0,
+        );
 
     const total = useMemo(
         () => calcTotal(ingredients),
@@ -36,16 +33,6 @@ function BurgerConstructor({ingredients}) {
         id={123456}
         onClose={() => setOpen(false)}
     />;
-
-    const handleKeyDown = (e) => {
-        if ('Escape' !== e.code) return;
-        setOpen(false);
-    };
-
-    useEffect(() => {
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [])
 
     return (
         <>

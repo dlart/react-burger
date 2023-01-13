@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import ModalOverlay from '../modal-overlay/ModalOverlay';
+import IngredientCard from '../ingredient-card/IngredientCard';
 
 const BUN = 'bun';
 const MAIN = 'main';
@@ -48,7 +49,7 @@ function BurgerIngredients({ingredients}) {
 
     let refs = [];
 
-    const handleClick = (type) => {
+    const handleTabClick = (type) => {
         setCurrent(type);
 
         refs[type].scrollIntoView({behavior: 'smooth'});
@@ -58,16 +59,6 @@ function BurgerIngredients({ingredients}) {
         ingredient={selected}
         onClose={() => setOpen(false)}
     />;
-
-    const handleKeyDown = (e) => {
-        if ('Escape' !== e.code) return;
-        setOpen(false);
-    };
-
-    useEffect(() => {
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [])
 
     return (
         <>
@@ -83,7 +74,7 @@ function BurgerIngredients({ingredients}) {
                         <Tab
                             active={current === type}
                             key={index}
-                            onClick={handleClick}
+                            onClick={handleTabClick}
                             value={type}
                         >
                             {typesMap[type]}
@@ -111,30 +102,14 @@ function BurgerIngredients({ingredients}) {
                                     index,
                                 ) => {
                                     return (
-                                        <li
-                                            className={styles.ingredient}
+                                        <IngredientCard
+                                            ingredient={ingredient}
                                             key={index}
                                             onClick={() => {
-                                                setSelected(ingredient);
                                                 setOpen(true);
+                                                setSelected(ingredient);
                                             }}
-                                        >
-                                            <Counter count={1} />
-                                            <img
-                                                alt={ingredient.name}
-                                                className="ml-4 mr-4"
-                                                src={ingredient.image}
-                                            />
-                                            <div className={`${styles.price} mt-1`}>
-                                                <span className="text text_type_digits-default">
-                                                    {ingredient.price}
-                                                </span>
-                                                <CurrencyIcon type="primary"/>
-                                            </div>
-                                            <div className={`${styles.name} mt-1 text text_type_main-default`}>
-                                                {ingredient.name}
-                                            </div>
-                                        </li>
+                                        />
                                     );
                                 })}
                             </ul>
@@ -147,6 +122,6 @@ function BurgerIngredients({ingredients}) {
     );
 }
 
-BurgerIngredients.propTypes = {ingredients: PropTypes.arrayOf(ingredientPropTypes)};
+BurgerIngredients.propTypes = {ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired};
 
 export default BurgerIngredients;
