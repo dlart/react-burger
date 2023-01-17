@@ -1,0 +1,14 @@
+.composition {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 0;
+}
+
+.composition li {
+    align-items: center;
+    display: flex;
+    flex-flow: column;
+    list-style: none;
+    text-align: center;
+}

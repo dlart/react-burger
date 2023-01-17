@@ -1,0 +1,35 @@
+.title {
+    display: block;
+    font-weight: 700;
+    font-size: 36px;
+    line-height: 40px;
+}
+
+.tabs {
+    display: flex;
+}
+
+.types {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    height: 563px;
+    overflow-y: scroll;
+}
+
+.type {
+    display: flex;
+    flex-direction: column;
+}
+
+.typeTitle {
+    display: flex;
+}
+
+.ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: space-between;
+    padding: 0;
+}

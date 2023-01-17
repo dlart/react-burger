@@ -1,0 +1,33 @@
+.burgerConstructor {
+
+}
+
+.burgerConstructor ul {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    height: 368px;
+    margin-left: 0;
+    overflow-y: scroll;
+    padding-left: 0;
+}
+
+.burgerConstructor ul li {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+    flex-direction: row;
+}
+
+.total {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.totalAmount {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
