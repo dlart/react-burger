@@ -1,11 +1,10 @@
 import React from 'react';
 import {CheckMarkIcon} from '@ya.praktikum/react-developer-burger-ui-components';
-import Modal from '../modal/Modal';
 import PropTypes from 'prop-types';
 
-export default function OrderDetails({id, onClose}) {
+export default function OrderDetails({id}) {
     return (
-        <Modal onClose={onClose}>
+        <>
             <div className="text text_type_digits-large">
                 {id}
             </div>
@@ -21,11 +20,10 @@ export default function OrderDetails({id, onClose}) {
             <div className="mt-2 text text_color_inactive text_type_main-default">
                 Дождитесь готовности на орбитальной станции
             </div>
-        </Modal>
+        </>
     );
 }
 
 OrderDetails.propTypes = {
     id: PropTypes.number.isRequired,
-    onClose: PropTypes.func.isRequired,
 }

@@ -11,6 +11,8 @@
 
 .logo {
     align-items: center;
+    background: none;
+    border: none;
     display: flex;
     flex: 1;
     justify-content: center;
@@ -37,12 +39,14 @@
     display: flex;
 }
 
-.header nav ul li a {
+.header nav ul li button {
+    background: none;
+    border: none;
     color: #8585AD;
     display: flex;
     text-decoration: none;
 }
 
-.header nav ul li.active a {
+.header nav ul li.active button {
     color: white;
 }

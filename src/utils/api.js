@@ -1,26 +1,36 @@
 export default class Api {
-    constructor({baseUrl, onError}) {
+    constructor({baseUrl}) {
         this.baseUrl = baseUrl;
-        this.onError = onError;
 
+        this._checkResponse = this._checkResponse.bind(this);
+        this._request = this._request.bind(this);
         this.getIngredients = this.getIngredients.bind(this);
+        this.createOrder = this.createOrder.bind(this);
+    }
+
+    _checkResponse(response) {
+        if (response.ok || response.success) {
+            return response.json();
+        }
+
+        return Promise.reject(`Ошибка ${response.status}`);
+    }
+
+    _request(url, options) {
+        return fetch(url, options).then(this._checkResponse)
     }
 
     async getIngredients() {
-        return fetch(this.baseUrl + '/api/ingredients')
-            .then((response) => response.json())
-            .then((result) => result.data)
-            .catch((error) => this.onError(error));
+        return this._request(this.baseUrl + '/api/ingredients')
+            .then((result) => result.data);
     }
 
     async createOrder(ingredientsIds) {
-        return fetch(this.baseUrl + '/api/orders', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+        return this._request(this.baseUrl + '/api/orders', {
             body: JSON.stringify({ingredients: ingredientsIds}),
+            headers: {'Content-Type': 'application/json'},
+            method: 'POST',
         })
-            .then((response) => response.json())
-            .then((result) => result)
-            .catch((error) => this.onError(error));
+        .then((result) => result);
     }
 };

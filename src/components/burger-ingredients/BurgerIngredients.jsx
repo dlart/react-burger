@@ -1,10 +1,10 @@
-import React, {useMemo, useState,} from 'react';
+import React, {useContext, useMemo, useState,} from 'react';
 import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
-import PropTypes from 'prop-types';
-import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import IngredientCard from '../ingredient-card/IngredientCard';
+import {BurgerConstructorContext} from '../../services/burgerConstructorContext';
+import Modal from '../modal/Modal';
 
 const BUN = 'bun';
 const MAIN = 'main';
@@ -16,7 +16,9 @@ const typesMap = {
     [SAUCE]: 'Соусы',
 };
 
-function BurgerIngredients({ingredients}) {
+function BurgerIngredients() {
+    const ingredients = useContext(BurgerConstructorContext);
+
     const [
         current,
         setCurrent,
@@ -45,10 +47,12 @@ function BurgerIngredients({ingredients}) {
         refs[type].scrollIntoView({behavior: 'smooth'});
     }
 
-    const modal = <IngredientDetails
-        ingredient={selected}
+    const modal = <Modal
         onClose={() => setOpen(false)}
-    />;
+        title="Детали ингредиента"
+    >
+        <IngredientDetails ingredient={selected}/>
+    </Modal>;
 
     return (
         <>
@@ -111,7 +115,5 @@ function BurgerIngredients({ingredients}) {
         </>
     );
 }
-
-BurgerIngredients.propTypes = {ingredients: PropTypes.arrayOf(ingredientPropTypes.isRequired).isRequired};
 
 export default BurgerIngredients;

@@ -1,15 +1,10 @@
 import React from 'react';
-import Modal from '../modal/Modal';
 import styles from './ingredient-details.module.css';
 import ingredientPropTypes from '../../utils/ingredientPropTypes';
-import PropTypes from 'prop-types';
 
-export default function IngredientDetails({ingredient, onClose}) {
+export default function IngredientDetails({ingredient}) {
     return (
-        <Modal
-            onClose={onClose}
-            title="Детали ингридиента"
-        >
+        <>
             <div>
                 <img
                     src={ingredient.image_large}
@@ -61,11 +56,10 @@ export default function IngredientDetails({ingredient, onClose}) {
                     </div>
                 </li>
             </ul>
-        </Modal>
+        </>
     );
 }
 
 IngredientDetails.propTypes = {
     ingredient: ingredientPropTypes,
-    onClose: PropTypes.func.isRequired,
 };

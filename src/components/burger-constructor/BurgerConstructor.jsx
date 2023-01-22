@@ -3,8 +3,9 @@ import {Button, ConstructorElement, CurrencyIcon, DragIcon,} from '@ya.praktikum
 import styles from './burger-constructor.module.css';
 import OrderDetails from '../order-details/OrderDetails';
 import {BurgerConstructorContext} from '../../services/burgerConstructorContext';
-import {API_BASE_URL, INGREDIENT_TYPE_BUN} from '../../constants';
-import Api from '../../utils/api';
+import {INGREDIENT_TYPE_BUN} from '../../constants';
+import {api} from '../../services/api';
+import Modal from '../modal/Modal';
 
 function BurgerConstructor() {
     const ingredients = useContext(BurgerConstructorContext);
@@ -19,7 +20,10 @@ function BurgerConstructor() {
         [ingredients],
     );
 
-    const bun = buns.shift();
+    const bun = useMemo(
+        () => buns.shift(),
+        [buns],
+    );
 
     const getFillings = (ingredients) => ingredients.filter(ingredient => INGREDIENT_TYPE_BUN !== ingredient.type);
 
@@ -49,11 +53,11 @@ function BurgerConstructor() {
     const firstIngredient = bun;
     const lastIngredient = bun;
 
-    const modal = <OrderDetails id={orderId} onClose={() => setOpen(false)} />;
+    const modal = <Modal onClose={() => setOpen(false)}>
+        <OrderDetails id={orderId} />
+    </Modal>;
 
     const handlerCreateOrder = () => {
-        const api = new Api({baseUrl: API_BASE_URL});
-
         const ingredientsIds = [
             bun._id,
             ...ingredients.map(ingredient => ingredient._id),
@@ -63,10 +67,10 @@ function BurgerConstructor() {
         api
             .createOrder(ingredientsIds)
             .then((data) => {
-                console.log(data);
                 setOrderId(data.order.number);
                 setOpen(true);
-            });
+            })
+            .catch(() => alert('Ошибка при оформлении заказа...'));
     }
 
     return (
@@ -77,7 +81,7 @@ function BurgerConstructor() {
                         extraClass="ml-6"
                         isLocked={true}
                         price={firstIngredient.price}
-                        text={firstIngredient.name}
+                        text={`${firstIngredient.name} (верх)`}
                         thumbnail={firstIngredient.image}
                         type="top"
                     />
@@ -86,17 +90,16 @@ function BurgerConstructor() {
                     {fillings
                         .map((
                             {
+                                _id,
                                 image,
                                 name,
                                 price,
-                            },
-                            index,
+                            }
                     ) => {
                         return (
-                            <li key={index}>
+                            <li key={_id}>
                                 <DragIcon type="primary" />
                                 <ConstructorElement
-                                    key={index}
                                     isLocked={false}
                                     text={name}
                                     price={price}
@@ -111,7 +114,7 @@ function BurgerConstructor() {
                         extraClass="ml-6"
                         isLocked={true}
                         price={lastIngredient.price}
-                        text={lastIngredient.name}
+                        text={`${lastIngredient.name} (низ)`}
                         thumbnail={lastIngredient.image}
                         type="bottom"
                     />
