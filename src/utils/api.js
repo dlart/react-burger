@@ -12,4 +12,15 @@ export default class Api {
             .then((result) => result.data)
             .catch((error) => this.onError(error));
     }
+
+    async createOrder(ingredientsIds) {
+        return fetch(this.baseUrl + '/api/orders', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ingredients: ingredientsIds}),
+        })
+            .then((response) => response.json())
+            .then((result) => result)
+            .catch((error) => this.onError(error));
+    }
 };

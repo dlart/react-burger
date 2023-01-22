@@ -5,6 +5,7 @@ import styles from './App.module.css';
 import AppHeader from '../../components/app-header/AppHeader';
 import BurgerIngredients from '../../components/burger-ingredients/BurgerIngredients';
 import BurgerConstructor from '../../components/burger-constructor/BurgerConstructor';
+import {BurgerConstructorContext} from '../../services/burgerConstructorContext';
 
 function App() {
   const [data, setData] = React.useState([]);
@@ -33,7 +34,9 @@ function App() {
                         <BurgerIngredients ingredients={data} />
                     </section>
                     <section>
-                        <BurgerConstructor ingredients={data} />
+                        <BurgerConstructorContext.Provider value={data}>
+                            <BurgerConstructor />
+                        </BurgerConstructorContext.Provider>
                     </section>
                 </>
                 : <>

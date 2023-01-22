@@ -1,32 +1,73 @@
-import React, {useMemo, useState} from 'react';
-import PropTypes from 'prop-types';
+import React, {useContext, useMemo, useState} from 'react';
 import {Button, ConstructorElement, CurrencyIcon, DragIcon,} from '@ya.praktikum/react-developer-burger-ui-components';
-import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import styles from './burger-constructor.module.css';
 import OrderDetails from '../order-details/OrderDetails';
+import {BurgerConstructorContext} from '../../services/burgerConstructorContext';
+import {API_BASE_URL, INGREDIENT_TYPE_BUN} from '../../constants';
+import Api from '../../utils/api';
 
-function BurgerConstructor({ingredients}) {
+function BurgerConstructor() {
+    const ingredients = useContext(BurgerConstructorContext);
+    const [orderId, setOrderId] = useState(0);
     const [open, setOpen] = useState(false);
 
-    const calcTotal = (ingredients) => ingredients
-        .map((ingredient) => ingredient.price)
-        .reduce(
-            (previous, current) => previous + current,
-            0,
-        );
+    const getBuns = (ingredients) => ingredients
+        .filter((ingredient) => INGREDIENT_TYPE_BUN === ingredient.type);
 
-    const total = useMemo(
-        () => calcTotal(ingredients),
+    const buns = useMemo(
+        () => getBuns(ingredients),
         [ingredients],
     );
 
-    const firstIngredient = ingredients[0];
-    const lastIngredient = ingredients[ingredients.length - 1];
+    const bun = buns.shift();
 
-    const modal = <OrderDetails
-        id={123456}
-        onClose={() => setOpen(false)}
-    />;
+    const getFillings = (ingredients) => ingredients.filter(ingredient => INGREDIENT_TYPE_BUN !== ingredient.type);
+
+    const fillings = useMemo(
+        () => getFillings(ingredients),
+        [ingredients],
+    );
+
+    const calcTotal = (bun, fillings) => {
+        const bunTotal = bun ? bun.price * 2 : 0;
+
+        const fillingsTotal = fillings
+            .map((ingredient) => ingredient.price)
+            .reduce(
+                (previous, current) => previous + current,
+                0,
+            );
+
+        return bunTotal + fillingsTotal;
+    }
+
+    const total = useMemo(
+        () => calcTotal(bun, fillings),
+        [bun, fillings],
+    );
+
+    const firstIngredient = bun;
+    const lastIngredient = bun;
+
+    const modal = <OrderDetails id={orderId} onClose={() => setOpen(false)} />;
+
+    const handlerCreateOrder = () => {
+        const api = new Api({baseUrl: API_BASE_URL});
+
+        const ingredientsIds = [
+            bun._id,
+            ...ingredients.map(ingredient => ingredient._id),
+            bun._id,
+        ];
+
+        api
+            .createOrder(ingredientsIds)
+            .then((data) => {
+                console.log(data);
+                setOrderId(data.order.number);
+                setOpen(true);
+            });
+    }
 
     return (
         <>
@@ -42,13 +83,14 @@ function BurgerConstructor({ingredients}) {
                     />
                 }
                 <ul className="mt-4">
-                    {ingredients.slice(1, ingredients.length - 1).map((
-                        {
-                            image,
-                            name,
-                            price,
-                        },
-                        index,
+                    {fillings
+                        .map((
+                            {
+                                image,
+                                name,
+                                price,
+                            },
+                            index,
                     ) => {
                         return (
                             <li key={index}>
@@ -82,7 +124,7 @@ function BurgerConstructor({ingredients}) {
                     <Button
                         extraClass="ml-10"
                         htmlType="button"
-                        onClick={() => setOpen(true)}
+                        onClick={handlerCreateOrder}
                         size="large"
                         type="primary"
                     >
@@ -94,7 +136,5 @@ function BurgerConstructor({ingredients}) {
         </>
     );
 }
-
-BurgerConstructor.propTypes = {ingredients: PropTypes.arrayOf(ingredientPropTypes)};
 
 export default BurgerConstructor;
