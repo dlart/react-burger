@@ -9,7 +9,7 @@ export default class Api {
     }
 
     _checkResponse(response) {
-        if (response.ok || response.success) {
+        if (response.ok) {
             return response.json();
         }
 
