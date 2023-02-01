@@ -21,16 +21,18 @@ export default class Api {
     }
 
     async getIngredients() {
-        return this._request(this.baseUrl + '/api/ingredients')
+        return this
+            ._request(this.baseUrl + '/api/ingredients')
             .then((result) => result.data);
     }
 
     async createOrder(ingredientsIds) {
-        return this._request(this.baseUrl + '/api/orders', {
-            body: JSON.stringify({ingredients: ingredientsIds}),
-            headers: {'Content-Type': 'application/json'},
-            method: 'POST',
-        })
-        .then((result) => result);
+        return this
+            ._request(this.baseUrl + '/api/orders', {
+                body: JSON.stringify({ingredients: ingredientsIds}),
+                headers: {'Content-Type': 'application/json'},
+                method: 'POST',
+            })
+            .then((result) => result);
     }
 };

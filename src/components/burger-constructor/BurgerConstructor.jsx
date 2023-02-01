@@ -1,143 +1,206 @@
-import React, {useContext, useMemo, useState} from 'react';
-import {Button, ConstructorElement, CurrencyIcon, DragIcon,} from '@ya.praktikum/react-developer-burger-ui-components';
-import styles from './burger-constructor.module.css';
-import OrderDetails from '../order-details/OrderDetails';
-import {BurgerConstructorContext} from '../../services/burgerConstructorContext';
-import {INGREDIENT_TYPE_BUN} from '../../constants';
-import {api} from '../../services/api';
-import Modal from '../modal/Modal';
+import React, { useEffect } from 'react';
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import _ from 'underscore';
+import { useDrop } from 'react-dnd';
+import {
+  INGREDIENT_TYPE_BUN,
+  INGREDIENT_TYPE_MAIN,
+  INGREDIENT_TYPE_SAUCE,
+} from '../../constants';
+import styles from './burger-constructor.module.css'
+import {
+  Button,
+  ConstructorElement,
+  CurrencyIcon,
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import BurgerConstructorIngredient from '../burger-constructor-ingredient/BurgerConstructorIngredient'
+import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
+import ingredientsSlice from '../../services/reducers/ingredients';
+import { createOrder } from '../../services/actions/order'
 
-function BurgerConstructor() {
-    const ingredients = useContext(BurgerConstructorContext);
-    const [orderId, setOrderId] = useState(0);
-    const [open, setOpen] = useState(false);
+export default function BurgerConstructor() {
+  const dispatch = useDispatch();
 
-    const getBuns = (ingredients) => ingredients
-        .filter((ingredient) => INGREDIENT_TYPE_BUN === ingredient.type);
+    const {
+        decreaseCount,
+        increaseCount,
+    } = ingredientsSlice.actions;
 
-    const buns = useMemo(
-        () => getBuns(ingredients),
-        [ingredients],
-    );
+    const {
+        calcTotalPrice,
+        setBun,
+    } = burgerConstructorSlice.actions
 
-    const bun = useMemo(
-        () => buns.shift(),
-        [buns],
-    );
+    const {
+        bun,
+        ingredients,
+        totalPrice,
+    } = useSelector(state => state.burgerConstructor);
 
-    const getFillings = (ingredients) => ingredients.filter(ingredient => INGREDIENT_TYPE_BUN !== ingredient.type);
+    useEffect(
+      () => {
+          dispatch(calcTotalPrice());
+      },
+      [
+          bun,
+          calcTotalPrice,
+          dispatch,
+          ingredients,
+        ],
+      );
 
-    const fillings = useMemo(
-        () => getFillings(ingredients),
-        [ingredients],
-    );
+    const handleBunItemDrop = (newBun) => {
+      dispatch(decreaseCount(bun._id));
+      dispatch(decreaseCount(bun._id));
+      dispatch(increaseCount(newBun._id));
+      dispatch(increaseCount(newBun._id));
+      dispatch(setBun(newBun));
+    };
 
-    const calcTotal = (bun, fillings) => {
-        const bunTotal = bun ? bun.price * 2 : 0;
+    const [
+      topBunStyle,
+      dropTopBunTarget,
+    ] = useDrop({
+      accept: INGREDIENT_TYPE_BUN,
+      collect: monitor => ({ background: monitor.isOver() ? '#624172' : '#2f2f37' }),
+      drop(newBunItem) {
+        handleBunItemDrop(newBunItem);
+      }
+    });
 
-        const fillingsTotal = fillings
-            .map((ingredient) => ingredient.price)
-            .reduce(
-                (previous, current) => previous + current,
-                0,
-            );
+    const [
+      bottomBunStyle,
+      dropBottomBunTarget,
+    ] = useDrop({
+      accept: INGREDIENT_TYPE_BUN,
+      collect: monitor => ({ background: monitor.isOver() ? '#624172' : '#2f2f37' }),
+      drop(newBun) {
+        dispatch(decreaseCount(bun._id));
+        dispatch(decreaseCount(bun._id));
+        dispatch(increaseCount(newBun._id));
+        dispatch(increaseCount(newBun._id));
+        dispatch(setBun(newBun));
+      },
+      type: 'ingredient',
+    });
 
-        return bunTotal + fillingsTotal;
-    }
-
-    const total = useMemo(
-        () => calcTotal(bun, fillings),
-        [bun, fillings],
-    );
-
-    const firstIngredient = bun;
-    const lastIngredient = bun;
-
-    const modal = <Modal onClose={() => setOpen(false)}>
-        <OrderDetails id={orderId} />
-    </Modal>;
+    const [
+      ingredientsStyle,
+      dropIngredientTarget,
+    ] = useDrop({
+      accept: [
+        INGREDIENT_TYPE_MAIN,
+        INGREDIENT_TYPE_SAUCE,
+      ],
+      collect: monitor => ({ background: monitor.isOver() ? '#624172' : '#2f2f37' }),
+    });
 
     const handlerCreateOrder = () => {
-        const ingredientsIds = [
-            bun._id,
-            ...ingredients.map(ingredient => ingredient._id),
-            bun._id,
-        ];
+      const ids = [
+        bun._id,
+        ...ingredients.map(ingredient => ingredient._id),
+      ];
+      dispatch(createOrder(ids));
+    };
 
-        api
-            .createOrder(ingredientsIds)
-            .then((data) => {
-                setOrderId(data.order.number);
-                setOpen(true);
-            })
-            .catch(() => alert('Ошибка при оформлении заказа...'));
-    }
+    const generateItemHash = () => Math.floor(Math.random() * 10000);
 
     return (
-        <>
-            <section className={`${styles.burgerConstructor} mt-25 p-4`}>
-                {firstIngredient &&
-                    <ConstructorElement
-                        extraClass="ml-6"
-                        isLocked={true}
-                        price={firstIngredient.price}
-                        text={`${firstIngredient.name} (верх)`}
-                        thumbnail={firstIngredient.image}
-                        type="top"
-                    />
-                }
-                <ul className="mt-4">
-                    {fillings
-                        .map((
-                            {
-                                _id,
-                                image,
-                                name,
-                                price,
-                            }
-                    ) => {
-                        return (
-                            <li key={_id}>
-                                <DragIcon type="primary" />
-                                <ConstructorElement
-                                    isLocked={false}
-                                    text={name}
-                                    price={price}
-                                    thumbnail={image}
-                                />
-                            </li>
-                        );
-                    })}
-                </ul>
-                {lastIngredient &&
-                    <ConstructorElement
-                        extraClass="ml-6"
-                        isLocked={true}
-                        price={lastIngredient.price}
-                        text={`${lastIngredient.name} (низ)`}
-                        thumbnail={lastIngredient.image}
-                        type="bottom"
-                    />
-                }
-                <section className={`${styles.total} mt-10`}>
-                <span className={`${styles.totalAmount} text text_type_main-large`}>
-                    {total}
-                    <CurrencyIcon type="primary" />
+      <>
+        <section className={`${styles.burgerConstructor} mt-25 p-4`}>
+          <div
+            className={`${styles.bunPlaceholder} ${!_.isEmpty(bun) ? styles.bunPlaceholderFilled : null} constructor-element constructor-element_pos_top ml-6`}
+            ref={dropTopBunTarget}
+            style={topBunStyle}
+          >
+            {!_.isEmpty(bun)
+              ? (
+                <ConstructorElement
+                  isLocked={true}
+                  price={bun.price}
+                  text={`${bun.name} (верх)`}
+                  thumbnail={bun.image}
+                  type="top"
+                />
+              )
+              : (
+                <span>
+                  Выберите булку
                 </span>
-                    <Button
-                        extraClass="ml-10"
-                        htmlType="button"
-                        onClick={handlerCreateOrder}
-                        size="large"
-                        type="primary"
+              )
+            }
+            </div>
+            <div ref={dropIngredientTarget}>
+              {0 < ingredients.length
+                ? (
+                  <ul className="mt-4">
+                    {ingredients
+                      .map((
+                        ingredient,
+                        index,
+                      ) => {
+                        return (
+                          <BurgerConstructorIngredient
+                            key={ingredient._id + generateItemHash()}
+                            index={index}
+                            ingredient={ingredient}
+                          />
+                        );
+                      })}
+                    </ul>
+                  )
+                  : (
+                    <div
+                      className={`${styles.ingredientsPlaceholder} constructor-element mb-4 ml-6 mt-4`}
+                      style={ingredientsStyle}
                     >
-                        Оформить заказ
-                    </Button>
-                </section>
-            </section>
-            {open && modal}
-        </>
+                      <span>Выберите ингридиенты</span>
+                    </div>
+                  )
+                }
+              </div>
+              <div
+                className={`${styles.bunPlaceholder} ${!_.isEmpty(bun) ? styles.bunPlaceholderFilled : null} constructor-element constructor-element_pos_bottom ml-6`}
+                ref={dropBottomBunTarget}
+                style={bottomBunStyle}
+              >
+              {!_.isEmpty(bun)
+                ? (
+                <ConstructorElement
+                  extraClass="ml-6"
+                  isLocked={true}
+                  price={bun.price}
+                  text={`${bun.name} (низ)`}
+                  thumbnail={bun.image}
+                  type="bottom"
+                />
+              )
+              : (
+                <span>
+                  Выберите булку
+                </span>
+              )
+            }
+          </div>
+          <section className={`${styles.total} mt-10`}>
+            <span className={`${styles.totalAmount} text text_type_main-large`}>
+              {totalPrice}
+              <CurrencyIcon type="primary" />
+            </span>
+            <Button
+              extraClass="ml-10"
+              htmlType="button"
+              onClick={handlerCreateOrder}
+              size="large"
+              type="primary"
+            >
+              Оформить заказ
+            </Button>
+          </section>
+        </section>
+      </>
     );
-}
-
-export default BurgerConstructor;
+};

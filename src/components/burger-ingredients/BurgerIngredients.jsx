@@ -1,119 +1,134 @@
-import React, {useContext, useMemo, useState,} from 'react';
-import {Tab} from '@ya.praktikum/react-developer-burger-ui-components';
+import React, { useMemo, useRef, useState, } from 'react'
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
-import IngredientDetails from '../ingredient-details/IngredientDetails';
 import IngredientCard from '../ingredient-card/IngredientCard';
-import {BurgerConstructorContext} from '../../services/burgerConstructorContext';
-import Modal from '../modal/Modal';
-
-const BUN = 'bun';
-const MAIN = 'main';
-const SAUCE = 'sauce';
+import ingredientSlice from '../../services/reducers/ingredient';
+import {
+  INGREDIENT_TYPE_BUN,
+  INGREDIENT_TYPE_MAIN,
+  INGREDIENT_TYPE_SAUCE,
+} from '../../constants';
 
 const typesMap = {
-    [BUN]: 'Булки',
-    [MAIN]: 'Начинки',
-    [SAUCE]: 'Соусы',
+  [INGREDIENT_TYPE_BUN]: 'Булки',
+  [INGREDIENT_TYPE_MAIN]: 'Начинки',
+  [INGREDIENT_TYPE_SAUCE]: 'Соусы',
 };
 
-function BurgerIngredients() {
-    const ingredients = useContext(BurgerConstructorContext);
+export default function BurgerIngredients() {
+  const dispatch = useDispatch();
 
-    const [
-        current,
-        setCurrent,
-    ] = useState(BUN);
+  const [
+    tab,
+    setTab,
+  ] = useState(INGREDIENT_TYPE_BUN);
 
-    const [selected, setSelected] = useState(null);
-    const [open, setOpen] = useState(false);
+  const { items: ingredients } = useSelector(state => state.ingredients);
 
-    const groupIngredients = (ingredients) => {
-        const ingredientsByType = {};
+  const { openModal } = ingredientSlice.actions;
 
-        for (const type of Object.keys(typesMap)) {
-            ingredientsByType[type] = ingredients.filter((ingredient) => type === ingredient.type);
-        }
-
-        return ingredientsByType;
-    };
-
-    const ingredientsByType = useMemo(() => groupIngredients(ingredients), [ingredients]);
-
-    let refs = [];
-
-    const handleTabClick = (type) => {
-        setCurrent(type);
-
-        refs[type].scrollIntoView({behavior: 'smooth'});
+  const groupIngredients = (ingredients) => {
+    const ingredientsByType = {};
+    for (const type of Object.keys(typesMap)) {
+      ingredientsByType[type] = ingredients.filter(ingredient => type === ingredient.type);
     }
+    return ingredientsByType;
+  };
 
-    const modal = <Modal
-        onClose={() => setOpen(false)}
-        title="Детали ингредиента"
-    >
-        <IngredientDetails ingredient={selected}/>
-    </Modal>;
+  const ingredientsByType = useMemo(
+    () => groupIngredients(ingredients),
+    [ingredients],
+  );
 
-    return (
-        <>
-            <h2 className="pt-10 text text_type_main-large">
-                Соберите бургер
-            </h2>
-            <nav className={`${styles.tabs} mt-5`}>
-                {Object.keys(typesMap).map((
-                    type,
-                    index,
-                ) => {
-                    return (
-                        <Tab
-                            active={current === type}
-                            key={index}
-                            onClick={handleTabClick}
-                            value={type}
-                        >
-                            {typesMap[type]}
-                        </Tab>
-                    );
+  let refs = [];
+
+  const handleTabClick = (type) => {
+    setTab(type);
+    refs[type].scrollIntoView({ behavior: 'smooth' });
+  }
+
+  const containerRef = useRef();
+
+  const handleScroll = () => {
+    const containerPosition = containerRef
+      .current
+      .getBoundingClientRect()
+      .top;
+
+    const categoriesPositions = {};
+
+    Object
+      .keys(typesMap)
+      .map(type => (categoriesPositions[type] = Math.abs(containerPosition - refs[type].getBoundingClientRect().top)));
+
+    const minCategoryPosition = Math.min(...Object.values(categoriesPositions));
+
+    const currentTab = Object
+      .keys(categoriesPositions)
+      .find(key => minCategoryPosition === categoriesPositions[key]);
+
+    setTab(currentTab);
+  };
+
+  return (
+    <>
+      <h2 className="pt-10 text text_type_main-large">
+        Соберите бургер
+      </h2>
+      <nav className={`${styles.tabs} mt-5`}>
+        {Object.keys(typesMap).map((
+          type,
+          index,
+        ) => {
+          return (
+            <Tab
+              active={type === tab}
+              key={index}
+              onClick={handleTabClick}
+              value={type}
+            >
+              {typesMap[type]}
+            </Tab>
+          );
+        })}
+      </nav>
+      <section
+        className={`${styles.types} mb-10 mt-10 pl-4 pr-4 pt-6`}
+        onScroll={handleScroll}
+        ref={containerRef}
+      >
+        {Object.keys(typesMap).map((
+          type,
+          index,
+        ) => {
+          return (
+            <section
+              className={styles.type}
+              key={index}
+              ref={(ref) => {refs[type] = ref}}
+            >
+              <div className={`${styles.typeTitle} text text_type_main-medium`}>
+                {typesMap[type]}
+              </div>
+              <ul className={`${styles.ingredients} mt-6`}>
+                {ingredientsByType[type].map((ingredient) => {
+                  return (
+                    <IngredientCard
+                      ingredient={ingredient}
+                      key={ingredient._id}
+                      onClick={() => dispatch(openModal(ingredient))}
+                    />
+                  );
                 })}
-            </nav>
-            <section className={`${styles.types} mb-10 mt-10 pl-4 pr-4 pt-6`}>
-                {Object.keys(typesMap).map((
-                    type,
-                    index,
-                ) => {
-                    return (
-                        <section
-                            className={styles.type}
-                            key={index}
-                            ref={(ref) => {refs[type] = ref}}
-                        >
-                            <div className={`${styles.typeTitle} text text_type_main-medium`}>
-                                {typesMap[type]}
-                            </div>
-                            <ul className={`${styles.ingredients} mt-6`}>
-                                {ingredientsByType[type].map((
-                                    ingredient,
-                                    index,
-                                ) => {
-                                    return (
-                                        <IngredientCard
-                                            ingredient={ingredient}
-                                            key={index}
-                                            onClick={() => {
-                                                setOpen(true);
-                                                setSelected(ingredient);
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </ul>
-                        </section>
-                    );
-                })}
+              </ul>
             </section>
-            {open && modal}
-        </>
-    );
+          );
+        })}
+      </section>
+    </>
+  );
 }
-
-export default BurgerIngredients;
