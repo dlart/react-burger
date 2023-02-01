@@ -16,6 +16,16 @@ import OrderDetails from "../order-details/OrderDetails";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
+// @ts-ignore
+function ingredientSelector(state) {
+  return state.ingredient;
+}
+
+// @ts-ignore
+function ingredientsSelector(state) {
+  return state.ingredients;
+}
+
 export default function App() {
   const dispatch = useDispatch();
 
@@ -23,18 +33,12 @@ export default function App() {
     request: ingredientsRequest,
     requestFailed: ingredientsRequestFailed,
     requestSuccess: ingredientsRequestSuccess,
-  } = useSelector(
-    // @ts-ignore
-    state => state.ingredients
-  );
+  } = useSelector(ingredientsSelector);
 
   const {
     item: ingredient,
     modalOpen: ingredientModalOpen,
-  } = useSelector(
-    // @ts-ignore
-    state => state.ingredient
-  );
+  } = useSelector(ingredientSelector);
 
   const {
     number: orderNumber,

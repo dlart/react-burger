@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
   useDispatch,
   useSelector,
@@ -29,28 +29,34 @@ export default function BurgerConstructor() {
         increaseCount,
     } = ingredientsSlice.actions;
 
-    const {
-        calcTotalPrice,
-        setBun,
-    } = burgerConstructorSlice.actions
+    const { setBun } = burgerConstructorSlice.actions
 
     const {
         bun,
         ingredients,
-        totalPrice,
     } = useSelector(state => state.burgerConstructor);
 
-    useEffect(
+    const totalPrice = useMemo(
       () => {
-          dispatch(calcTotalPrice());
+        return _.isEmpty(bun)
+          ? (
+            ingredients.length
+              ? ingredients.reduce((a, b) => a + b.price, 0)
+              : 0
+          )
+          : (
+            bun.price * 2
+            + ingredients.reduce(
+              (a, b) => a + b.price,
+              0,
+            )
+          )
       },
       [
-          bun,
-          calcTotalPrice,
-          dispatch,
-          ingredients,
-        ],
-      );
+        bun,
+        ingredients,
+      ],
+    );
 
     const handleBunItemDrop = (newBun) => {
       dispatch(decreaseCount(bun._id));
