@@ -31,3 +31,23 @@
     flex-direction: row;
     gap: 10px;
 }
+
+.bunPlaceholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ingredientsPlaceholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.bunPlaceholderFilled {
+    padding: 0;
+}
+
+.ingredientsContainer {
+    min-height: 368px;
+}

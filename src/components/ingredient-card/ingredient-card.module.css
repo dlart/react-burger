@@ -1,18 +1,18 @@
 .ingredient {
-    display: block;
-    flex: 1;
-    max-width: 274px;
-    position: relative;
+  display: block;
+  flex: 1;
+  max-width: 274px;
+  position: relative;
 }
 
 .name {
-    text-align: center;
+  text-align: center;
 }
 
 .price {
-    align-items: center;
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
 }

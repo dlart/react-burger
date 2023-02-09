@@ -1,3 +1,8 @@
+.page {
+    margin: 0 auto;
+    max-width: 1480px
+}
+
 .main {
     display: flex;
     gap: 40px;

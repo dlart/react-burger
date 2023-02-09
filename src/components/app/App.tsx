@@ -1,48 +1,113 @@
 import React from 'react';
-import {API_BASE_URL} from '../../constants';
-import Api from '../../utils/api';
+import {
+    useDispatch,
+    useSelector,
+} from 'react-redux';
+import { getIngredients } from '../../services/actions/ingredients';
+import ingredientSlice from '../../services/reducers/ingredient';
+import orderSlice from '../../services/reducers/order';
 import styles from './App.module.css';
 import AppHeader from '../../components/app-header/AppHeader';
 import BurgerIngredients from '../../components/burger-ingredients/BurgerIngredients';
 import BurgerConstructor from '../../components/burger-constructor/BurgerConstructor';
+import Modal from "../modal/Modal";
+import IngredientDetails from "../ingredient-details/IngredientDetails";
+import OrderDetails from "../order-details/OrderDetails";
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
-function App() {
-  const [data, setData] = React.useState([]);
-  const [error, setError] = React.useState('');
-
-  const onError = () => setError('Ошибка при загрузке данных...');
-
-  React.useEffect(() => {
-      const api = new Api({
-          baseUrl: API_BASE_URL,
-          onError: onError,
-      });
-
-      api
-          .getIngredients()
-          .then((data) => setData(data));
-  }, []);
-
-  return (
-    <>
-        <AppHeader />
-        <main className={`${styles.main} pl-10 pr-10`}>
-            {'' === error
-                ? <>
-                    <section>
-                        <BurgerIngredients ingredients={data} />
-                    </section>
-                    <section>
-                        <BurgerConstructor ingredients={data} />
-                    </section>
-                </>
-                : <>
-                    <h1>{error}</h1>
-                </>
-            }
-        </main>
-    </>
-  );
+// @ts-ignore
+function ingredientSelector(state) {
+  return state.ingredient;
 }
 
-export default App;
+// @ts-ignore
+function ingredientsSelector(state) {
+  return state.ingredients;
+}
+
+export default function App() {
+  const dispatch = useDispatch();
+
+  const {
+    request: ingredientsRequest,
+    requestFailed: ingredientsRequestFailed,
+    requestSuccess: ingredientsRequestSuccess,
+  } = useSelector(ingredientsSelector);
+
+  const {
+    item: ingredient,
+    modalOpen: ingredientModalOpen,
+  } = useSelector(ingredientSelector);
+
+  const {
+    number: orderNumber,
+    modalOpen: orderModalOpen,
+  } = useSelector(
+    // @ts-ignore
+    state => state.order
+  );
+
+  React.useEffect(() => {
+    // @ts-ignore
+    dispatch(getIngredients());
+  }, [dispatch]);
+
+  const { closeModal: closeIngredientsModal } = ingredientSlice.actions;
+
+  const { closeModal: closeOrderModal } = orderSlice.actions;
+
+  return (
+    <div className={styles.page}>
+        <AppHeader />
+        <main className={`${styles.main} pl-10 pr-10`}>
+            {
+                ingredientsRequest
+                && !ingredientsRequestFailed
+                && !ingredientsRequestSuccess
+                && (
+                    <h1>Загрузка ингредиентов...</h1>
+                )
+            }
+            {
+                !ingredientsRequest
+                && ingredientsRequestFailed
+                && !ingredientsRequestSuccess
+                && (
+                    <h1>Что-то пошло не так...</h1>
+                )
+            }
+            {
+                !ingredientsRequest
+                && !ingredientsRequestFailed
+                && ingredientsRequestSuccess
+                && (
+                    <DndProvider backend={HTML5Backend}>
+                        <section>
+                            <BurgerIngredients />
+                        </section>
+                        <section>
+                            <BurgerConstructor />
+                        </section>
+                    </DndProvider>
+                )
+            }
+            {
+                ingredientModalOpen && (
+                <Modal
+                    onClose={() => dispatch(closeIngredientsModal())}
+                    title='Детали ингредиента'
+                >
+                    <IngredientDetails ingredient={ingredient}/>
+                </Modal>
+            )}
+            {
+                orderModalOpen && (
+                    <Modal onClose={() => dispatch(closeOrderModal())}>
+                        <OrderDetails id={orderNumber} />
+                    </Modal>
+                )}
+        </main>
+    </div>
+  );
+}

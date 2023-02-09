@@ -1,35 +1,35 @@
-.title {
-    display: block;
-    font-weight: 700;
-    font-size: 36px;
-    line-height: 40px;
+.ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: space-between;
+  padding: 0;
 }
 
 .tabs {
-    display: flex;
+  display: flex;
 }
 
-.types {
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    height: 563px;
-    overflow-y: scroll;
+.title {
+  display: block;
+  font-weight: 700;
+  font-size: 36px;
+  line-height: 40px;
 }
 
 .type {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .typeTitle {
-    display: flex;
+  display: flex;
 }
 
-.ingredients {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    justify-content: space-between;
-    padding: 0;
+.types {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  height: 563px;
+  overflow-y: scroll;
 }
