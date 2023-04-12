@@ -1,0 +1,9 @@
+.main {
+  display: flex;
+  gap: 40px;
+  justify-content: space-around;
+}
+
+.main section {
+  flex: 1;
+}

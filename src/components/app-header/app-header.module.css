@@ -30,16 +30,8 @@
   display: flex;
 }
 
-.header nav ul li button {
-  background: none;
-  border: none;
-  color: #8585AD;
-  display: flex;
-  text-decoration: none;
-}
+.menu {
 
-.header nav ul li.active button {
-  color: white;
 }
 
 .logo {
@@ -49,4 +41,18 @@
   display: flex;
   flex: 1;
   justify-content: center;
+}
+
+.menuItem a {
+  color: #8585AD;
+  display: flex;
+  text-decoration: none;
+}
+
+.menuItem a.active {
+  color: white !important;
+}
+
+.menuItem a.active svg {
+  color: white !important;
 }
