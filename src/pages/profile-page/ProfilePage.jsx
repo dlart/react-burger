@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import styles from './profile-page.module.css'
 import {
   NavLink,
   useNavigate,
 } from 'react-router-dom'
 import {
+  Button,
   EmailInput,
   Input,
   PasswordInput,
@@ -13,37 +14,84 @@ import {
   useDispatch,
   useSelector,
 } from 'react-redux'
-import { logout } from '../../services/actions/logout'
+import { logout } from '../../services/actions/user'
 import { getUser, updateUser } from '../../services/actions/user'
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector(state => state.user);
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  
+  const {
+    email,
+    name,
+    password,
+  } = useSelector(state => state.user.user);
+  
+  const [form, setForm] = useState({
+    email,
+    name,
+    password,
+  });
 
   useEffect(() => {
-    dispatch(getUser(localStorage.getItem('token')));
-    setEmail(user.email);
-    setName(user.name);
-  }, []);
+    dispatch(getUser());
+  
+    setForm({
+      name,
+      email,
+      password,
+    });
+  }, [dispatch]);
+  
+  function onFormChange(event) {
+    const fieldName = event
+      .target
+      .name;
+    const fieldValue = event
+      .target
+      .value;
+    
+    setForm({
+      ...form,
+      [fieldName]: fieldValue,
+    });
+  }
+  
+  const isChanged = useMemo(() => {
+    return email !== form.email
+      || name !== form.name
+      || password !== form.password;
+  }, [
+    email,
+    form,
+    name,
+    password,
+  ]);
+  
+  function onReset(event) {
+    event.preventDefault();
+    
+    setForm({
+      email,
+      name,
+      password,
+    });
+  }
 
   const handleLogout = () => {
-    dispatch(logout(localStorage.getItem('refreshToken')));
-    navigate("/login");
+    dispatch(logout());
+    
+    navigate('/login');
   };
 
-  const handleSubmit = () => {
-    dispatch(updateUser(
-      localStorage.getItem('refreshToken'),
-      {
-        nmae: name,
-        email: email,
-        password: password
-      }
-    ));
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    
+    dispatch(updateUser({
+      email: form.email,
+      name: form.name,
+      password: form.password
+    }));
   };
 
   return (
@@ -75,29 +123,50 @@ export default function ProfilePage() {
       </section>
       <section className={styles.form}>
         <form
-        className={styles.form}
+          className={styles.form}
           onSubmit={handleSubmit}
         >
           <Input
-            onChange={(event) => setName(event.target.value)}
+            onChange={onFormChange}
             name={'name'}
             icon="EditIcon"
             placeholder="Имя"
-            value={name}
+            value={form.name}
           />
           <EmailInput
             name={'email'}
             placeholder="Логин"
             icon="EditIcon"
-            onChange={(event) => setEmail(event.target.value)}
-            value={email}
+            onChange={onFormChange}
+            value={form.email}
           />
           <PasswordInput
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={onFormChange}
             name={'password'}
             icon="EditIcon"
-            value={password}
+            value={form.password}
           />
+          <Button
+            htmlType="submit"
+            size="medium"
+            type="primary"
+          >
+            Сохранить
+          </Button>
+          {
+            isChanged
+            ? (
+                <Button
+                  htmlType={'button'}
+                  onClick={onReset}
+                  size="large"
+                  type="secondary"
+                >
+                  Отмена
+                </Button>
+            )
+            : null
+          }
         </form>
       </section>
     </main>

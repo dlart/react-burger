@@ -7,17 +7,24 @@ import {
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { register } from '../../services/actions/register';
+import { useDispatch, useSelector } from 'react-redux'
+import { register } from '../../services/actions/user';
 
 export default function RegisterPage() {
+  const { isLoggedIn } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-
+  
+  if (isLoggedIn) {
+    navigate('/', {replace: true});
+    
+    return null;
+  }
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 

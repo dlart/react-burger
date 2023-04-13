@@ -1,8 +1,48 @@
 import React from 'react';
 import styles from './ingredient-details.module.css';
 import ingredientPropTypes from '../../utils/ingredientPropTypes';
+import { useDispatch, useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
+import userSlice from '../../services/reducers/user';
+import ingredientSlice from '../../services/reducers/ingredient';
+import NotFoundPage from '../../pages/not-found-page/NotFoundPage'
 
 export default function IngredientDetails({ingredient}) {
+  const dispatch = useDispatch();
+  
+  const { item } = useSelector((state) => state.ingredient);
+  const { ingredients } = useSelector((state) => state.ingredients);
+  const { id } = useParams();
+  
+  const {
+    openModal,
+  } = ingredientSlice.actions;
+  
+  React.useEffect(
+    () => {
+      if (!item
+        && id
+        && ingredients
+      ) {
+        const ingredient = ingredients.find((ingredient) => ingredient._id === id);
+        
+        if(ingredient) {
+          dispatch(openModal(ingredient));
+        }
+      }
+    },
+    [
+      item,
+      id,
+      ingredients,
+      dispatch,
+    ],
+  );
+  
+  if (!item) {
+    return (<NotFoundPage />);
+  }
+  
   return (
     <>
       <div>

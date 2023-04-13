@@ -1,167 +1,187 @@
 export default class Api {
-    constructor({baseUrl}) {
-        this.baseUrl = baseUrl;
+  constructor (baseUrl) {
+    this.baseUrl = baseUrl
 
-        this._checkResponse = this._checkResponse.bind(this);
-        this._request = this._request.bind(this);
-        this._refreshToken = this._refreshToken.bind(this);
-        this._fetchWithRefresh = this._fetchWithRefresh.bind(this);
-        this.getIngredients = this.getIngredients.bind(this);
-        this.createOrder = this.createOrder.bind(this);
+    this._checkResponse = this._checkResponse.bind(this);
+    this._request = this._request.bind(this);
+    this.createOrder = this.createOrder.bind(this);
+    this.getIngredients = this.getIngredients.bind(this);
+    this.getUser = this.getUser.bind(this);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+    this.passwordReset = this.passwordReset.bind(this);
+    this.passwordResetRequest = this.passwordResetRequest.bind(this);
+    this.refreshToken = this.refreshToken.bind(this);
+    this.register = this.register.bind(this);
+    this.updateUser = this.updateUser.bind(this);
+  }
+
+  _checkResponse (response) {
+    if (response.ok) {
+      return response.json();
     }
 
-    _checkResponse(response) {
-        if (response.ok) {
-            return response.json();
-        }
+    return Promise.reject(response);
+  }
 
-        return Promise.reject(`Ошибка ${response.status}`);
-    }
+  _request (
+    url,
+    options,
+  ) {
+    return fetch(
+      url,
+      options,
+    )
+    .then(this._checkResponse);
+  }
 
-    _refreshToken() {
-        return fetch(`${this.baseUrl}/auth/token`, {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            credentials: 'same-origin',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
-        }).then((res) => this._checkResponse(res));
-    }
+  async createOrder (ingredientsIds) {
+    return this
+      ._request(
+        `${this.baseUrl}/api/orders`,
+        {
+          body: JSON.stringify({ ingredients: ingredientsIds }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      )
+      .then((result) => result);
+  }
 
-    async _fetchWithRefresh(url, options) {
-        return fetch(url, options).then((res) => this._checkResponse(res))
-        .catch((res) => {
-            return res.json()
-            .then((err) => {
-                if (err?.message === 'jwt expired') {
-                    return this._refreshToken()
-                    .then(res => {
-                        localStorage.setItem('refreshToken', res.refreshToken)
-                        const authToken = res.accessToken.split('Bearer ')[1];
-                        localStorage.setItem('token', res.authToken)
-                        options.headers.Authorization = res.accessToken
-                        return fetch(url, options).then((res) => this._checkResponse(res))
-                    })
-                } else {
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('refreshToken');
-                    // eslint-disable-next-line
-                    location.reload()
-                    return Promise.reject(err)
-                }
-            })
-        })
-    }
+  async getIngredients () {
+    return this
+      ._request(`${this.baseUrl}/api/ingredients`)
+      .then((result) => result.data);
+  }
 
-    _request(url, options) {
-        return this._fetchWithRefresh(url, options);
-    }
+  async getUser (token) {
+    return this
+      ._request(
+        `${this.baseUrl}/api/auth/user`,
+        {
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        },
+      )
+      .then(response => response.user);
+  }
 
-    async getIngredients() {
-        return this
-            ._request(this.baseUrl + '/api/ingredients')
-            .then((result) => result.data);
-    }
+  async login ({
+    email,
+    password,
+  }) {
+    return this
+      ._request(
+        `${this.baseUrl}/api/auth/login`,
+        {
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      );
+  }
 
-    async createOrder(ingredientsIds) {
-        return this
-            ._request(this.baseUrl + '/api/orders', {
-                body: JSON.stringify({ingredients: ingredientsIds}),
-                headers: {'Content-Type': 'application/json'},
-                method: 'POST',
-            })
-            .then((result) => result);
-    }
+  async logout (refreshToken) {
+    return this
+      ._request(
+        `${this.baseUrl}/api/auth/logout`,
+        {
+          body: JSON.stringify({ token: refreshToken }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      );
+  }
 
-    async passwordResetRequest(email) {
-        return this
-            ._request(this.baseUrl + '/api/password-reset', {
-                body: JSON.stringify({email: email}),
-                headers: {'Content-Type': 'application/json'},
-                method: 'POST',
-            });
-    }
+  async passwordReset ({
+    password,
+    token,
+  }) {
+    return this
+      ._request(
+        `${this.baseUrl}/api/password-reset/reset`,
+        {
+          body: JSON.stringify({
+            password,
+            token,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      );
+  }
 
-    async passwordReset({
+  async passwordResetRequest (email) {
+    return this
+      ._request(
+        `${this.baseUrl}/api/password-reset`,
+        {
+          body: JSON.stringify({ email: email }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      );
+  }
+  
+  async refreshToken (refreshToken) {
+    return this
+      ._request(`${this.baseUrl}/api/auth/token`,
+        {
+          body: JSON.stringify({ token: refreshToken }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      );
+  }
+
+  async register ({
+    email,
+    name,
+    password,
+  }) {
+    return this
+      ._request(`${this.baseUrl}/api/auth/register`,
+        {
+          body: JSON.stringify({
+            email,
+            name,
+            password,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
+      );
+  }
+
+  async updateUser (
+    token,
+    {
+      email,
+      name,
       password,
-      token,
-    }) {
-        return this
-        ._request(this.baseUrl + '/api/password-reset/reset', {
-            body: JSON.stringify({
-                password,
-                token,
-            }),
-            headers: {'Content-Type': 'application/json'},
-            method: 'POST',
-        });
-    }
-
-    async register({
-        email,
-        password,
-        name,
-    }) {
-        return this
-        ._request(this.baseUrl + '/api/auth/register', {
-            body: JSON.stringify({
-                email,
-                password,
-                name,
-            }),
-            headers: {'Content-Type': 'application/json'},
-            method: 'POST',
-        });
-    }
-
-    async login({
-        email,
-        password,
-    }) {
-        return this
-            ._request(this.baseUrl + '/api/auth/login', {
-                body: JSON.stringify({
-                    email,
-                    password,
-                }),
-                headers: {'Content-Type': 'application/json'},
-                method: 'POST',
-            });
-    }
-
-    async logout(refreshToken) {
-        return this
-        ._request(this.baseUrl + '/api/auth/logout', {
-            body: JSON.stringify({
-                token: refreshToken
-            }),
-            headers: {'Content-Type': 'application/json'},
-            method: 'POST',
-        });
-    }
-
-    async getUser(token) {
-        return this
-        ._request(this.baseUrl + '/api/auth/user', {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            method: 'GET',
-        })
-        .then(response => response.user);
-    }
-
-    async updateUser(token, user) {
-        return this
-        ._request(this.baseUrl + '/api/auth/user', {
-            body: JSON.stringify(user),
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + token,
-            },
-            method: 'PATCH',
-        });
-    }
+    },
+  ) {
+    return this
+      ._request(
+        `${this.baseUrl}/api/auth/user`,
+        {
+          body: JSON.stringify({
+            email,
+            name,
+            password,
+          }),
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json',
+          },
+          method: 'PATCH',
+        },
+      );
+  }
 };

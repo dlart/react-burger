@@ -5,7 +5,7 @@ import {
   Input,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components'
-import { api } from '../../services/api'
+import api from '../../services/api'
 import { Link } from 'react-router-dom'
 
 export default function ResetPasswordPage() {

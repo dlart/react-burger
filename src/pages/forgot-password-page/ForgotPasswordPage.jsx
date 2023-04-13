@@ -5,7 +5,7 @@ import {
   EmailInput,
 } from '@ya.praktikum/react-developer-burger-ui-components'
 import { Link } from 'react-router-dom'
-import { api } from '../../services/api'
+import api from '../../services/api'
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');

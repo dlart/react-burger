@@ -4,28 +4,35 @@ import {
   EmailInput,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch } from 'react-redux'
-import styles from './login-page.module.css'
+import { useDispatch, useSelector } from 'react-redux'
+import styles from './login-page.module.css';
 import { Link } from 'react-router-dom'
-import { login } from '../../services/actions/login'
-import { useNavigate } from "react-router-dom";
+import { login } from '../../services/actions/user';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
+  const { isLoggedIn } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  
+  if (isLoggedIn) {
+    navigate('/', {replace: true});
+    
+    return null;
+  }
+  
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(login(
+    dispatch(login({
       email,
       password,
-    ));
-
-    navigate('/');
+    }));
+  
+    navigate('/', {replace: true});
   }
 
   return (
@@ -49,7 +56,11 @@ export default function LoginPage() {
           icon="HideIcon"
           value={password}
         />
-        <Button htmlType="submit" type="primary" size="medium">
+        <Button
+          htmlType="submit"
+          size="medium"
+          type="primary"
+        >
           Войти
         </Button>
         <p className="text text_type_main-small">

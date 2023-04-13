@@ -1,5 +1,5 @@
+import api from '../../services/api';
 import orderSlice from '../reducers/order';
-import { api } from '../api';
 
 export const createOrder = (ids) => {
   const {
@@ -11,10 +11,16 @@ export const createOrder = (ids) => {
 
   return dispatch => {
     dispatch(request());
-
+    
     api
       .createOrder(ids)
-      .then((data) => dispatch(requestSuccess({ number: data.order.number })))
+      .then((data) => {
+        const orderNumber = data
+          .order
+          .number;
+        
+        dispatch(requestSuccess({ number: orderNumber }))
+      })
       .catch(() => dispatch(requestFailed()))
       .finally(() => dispatch(openModal()))
   }
