@@ -52,8 +52,8 @@ export default function IngredientCard({
             className={styles.link}
             to={{
               pathname: `/ingredients/${ingredient._id}`,
-              state: { background: location },
             }}
+            state={{ background: location }}
           >
             <Counter count={ingredient.count} />
             <img

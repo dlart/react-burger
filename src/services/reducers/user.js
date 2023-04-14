@@ -100,6 +100,7 @@ const reducers = {
     state,
     action,
   ) {
+    state.isLoggedIn = true;
     state.registerRequest = false;
     state.registerRequestFailed = false;
     state.registerRequestSuccess = true;
@@ -119,6 +120,7 @@ const reducers = {
     state.requestSuccess = false;
   },
   requestSuccess(state, action) {
+    state.isLoggedIn = true;
     state.request = false;
     state.requestFailed = false;
     state.requestSuccess = true;

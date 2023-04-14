@@ -117,15 +117,8 @@ export const getUser = () => {
     api
       .getUser(token)
       .then((response) => dispatch(requestSuccess(response)))
-      .catch(response => {
-        response
-        .json()
-        .then(response => {
-          false === response.success
-            && 'jwt expired' === response.message
-              ? dispatch(refreshToken())
-              : dispatch(requestFailed());
-        });
+      .catch(() => {
+        dispatch(requestFailed())
       });
   }
 };

@@ -3,7 +3,7 @@ import IngredientDetails from '../../components/ingredient-details/IngredientDet
 import {
   useSelector,
 } from 'react-redux';
-import { useNavigate, useLocation, Route } from "react-router-dom";
+import { useNavigate, useLocation, Routes, Route } from "react-router-dom";
 
 const RoutingModal = () => {
   const navigate = useNavigate();
@@ -19,14 +19,15 @@ const RoutingModal = () => {
 
   return (
     <>
-      {background && (
-        <Route path={`/ingredients/:id`}>
-          {items.length && (
-            <Modal title={"Детали ингредиента"} onClose={onModalClose}>
-              <IngredientDetails />
-            </Modal>
-          )}
-        </Route>
+      {items.length && background && (
+      <Routes>
+            <Route path={`/ingredients/:id`} element={
+                <Modal title={"Детали ингредиента"} onClose={onModalClose}>
+                  <IngredientDetails />
+                </Modal>
+            }>
+            </Route>
+      </Routes>
       )}
     </>
   );

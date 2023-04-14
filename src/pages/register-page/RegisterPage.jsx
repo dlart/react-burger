@@ -5,20 +5,24 @@ import {
   EmailInput,
   Input,
   PasswordInput,
-} from '@ya.praktikum/react-developer-burger-ui-components'
-import { Link, useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../../services/actions/user';
 
 export default function RegisterPage() {
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const {
+    isLoggedIn,
+    registerRequestFailed,
+    registerRequestSuccess
+  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
-  
+
   if (isLoggedIn) {
     navigate('/', {replace: true});
     
@@ -34,7 +38,9 @@ export default function RegisterPage() {
       name,
     ))
 
-    navigate('/');
+    if (registerRequestSuccess) {
+        navigate('/')
+    }
   }
 
   return (
@@ -43,6 +49,11 @@ export default function RegisterPage() {
         <div className="text text_type_main-medium pt-2">
           Регистрация
         </div>
+        {registerRequestFailed &&
+            <p className={styles.error}>
+                Ошибка регистрации
+            </p>
+        }
         <Input
           onChange={(event) => setName(event.target.value)}
           name={'name'}

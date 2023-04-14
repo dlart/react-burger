@@ -11,9 +11,14 @@ export const createOrder = (ids) => {
 
   return dispatch => {
     dispatch(request());
+  
+    const token = localStorage.getItem('accessToken');
     
     api
-      .createOrder(ids)
+      .createOrder(
+        ids,
+        token,
+      )
       .then((data) => {
         const orderNumber = data
           .order

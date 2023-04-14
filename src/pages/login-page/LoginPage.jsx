@@ -24,11 +24,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  
-  if (loginRequestSuccess) {
-    navigate('/', {replace: true});
-  }
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
   
@@ -36,7 +32,7 @@ export default function LoginPage() {
       email,
       password,
     }));
-  
+
     if (isLoggedIn) {
       navigate('/', { replace: true });
     }

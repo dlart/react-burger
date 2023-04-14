@@ -12,9 +12,12 @@ import ProfilePage from "../../pages/profile-page/ProfilePage";
 import NotFoundPage from "../../pages/not-found-page/NotFoundPage";
 import OrderFeedPage from "../../pages/order-feed-page/OrderFeedPage";
 import {ProtectedRoute} from "../protected-route/ProtectedRoute";
+import {OnlyUnAuthRoute} from "../only-un-auth-route/OnlyUnAuthRoute";
 import { getIngredients } from "../../services/actions/ingredients";
 import {useDispatch, useSelector} from "react-redux";
 import IngredientPage from '../../pages/ingredient-page/IngredientPage';
+import {getUser} from "../../services/actions/user";
+import { ROUTES } from '../../constants';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -25,6 +28,8 @@ export default function App() {
   React.useEffect(() => {
     // @ts-ignore
     dispatch(getIngredients());
+    // @ts-ignore
+    dispatch(getUser());
   }, [dispatch]);
 
   const location = useLocation();
@@ -34,14 +39,26 @@ export default function App() {
     <div className={styles.page}>
         <AppHeader />
         <Routes location={background || location}>
-          <Route path="/" element={<BurgerConstructorPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/reset-password" element={(
-              <ProtectedRoute>
-                  <ResetPasswordPage />
-              </ProtectedRoute>
+          <Route path={ROUTES.INDEX_ROUTE} element={<BurgerConstructorPage />} />
+          <Route path={ROUTES.LOGIN_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                <LoginPage />
+              </OnlyUnAuthRoute>
+          )} />
+          <Route path={ROUTES.REGISTER_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                  <RegisterPage />
+              </OnlyUnAuthRoute>
+          )} />
+          <Route path={ROUTES.FORGOT_PASSWORD_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                <ForgotPasswordPage />
+              </OnlyUnAuthRoute>
+          )} />
+          <Route path={ROUTES.RESET_PASSWORD_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                <ResetPasswordPage />
+              </OnlyUnAuthRoute>
           )} />
           <Route
               element={(
@@ -49,11 +66,11 @@ export default function App() {
                   <ProfilePage />
                 </ProtectedRoute>
               )}
-              path="/profile"
+              path={ROUTES.PROFILE_ROUTE}
           />
           <Route
               element={items.length && <IngredientPage />}
-              path="/ingredients/:id"
+              path={ROUTES.INGREDIENT_ROUTE}
           />
           <Route
             element={(
@@ -61,7 +78,7 @@ export default function App() {
                 <OrderFeedPage />
               </ProtectedRoute>
             )}
-            path="/order-feed"
+            path={ROUTES.ORDER_FEED_ROUTE}
           />
           <Route
               path="*"

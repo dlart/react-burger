@@ -4,6 +4,7 @@ export default class Api {
 
     this._checkResponse = this._checkResponse.bind(this);
     this._request = this._request.bind(this);
+    this._requestWithToken = this._requestWithToken.bind(this);
     this.createOrder = this.createOrder.bind(this);
     this.getIngredients = this.getIngredients.bind(this);
     this.getUser = this.getUser.bind(this);
@@ -17,11 +18,11 @@ export default class Api {
   }
 
   _checkResponse (response) {
-    if (response.ok) {
-      return response.json();
-    }
-
-    return Promise.reject(response);
+    return response.ok
+      ? response.json()
+      : response
+        .json()
+        .then((error) => Promise.reject(error));
   }
 
   _request (
@@ -34,14 +35,44 @@ export default class Api {
     )
     .then(this._checkResponse);
   }
+  
+  async _requestWithToken (
+    url,
+    options
+  ) {
+    try {
+      const response = await fetch(url, options);
+      return await this._checkResponse(response);
+    } catch (error) {
+      if (error.message === "jwt expired") {
+        const refreshData = await this.refreshToken(localStorage.getItem('refreshToken')); //обновляем токен
+        if (!refreshData.success) {
+          return Promise.reject(refreshData);
+        }
+        localStorage.setItem('accessToken', refreshData.accessToken);
+        localStorage.setItem('refreshToken', refreshData.refreshToken);
+        options.headers.authorization = refreshData.accessToken;
+        const res = await fetch(url, options); //повторяем запрос
+        return await this._checkResponse(res);
+      } else {
+        return Promise.reject(error);
+      }
+    }
+  }
 
-  async createOrder (ingredientsIds) {
+  async createOrder (
+    ingredientsIds,
+    token,
+  ) {
     return this
-      ._request(
+      ._requestWithToken(
         `${this.baseUrl}/api/orders`,
         {
           body: JSON.stringify({ ingredients: ingredientsIds }),
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Authorization': token,
+            'Content-Type': 'application/json'
+          },
           method: 'POST',
         },
       )
@@ -56,7 +87,7 @@ export default class Api {
 
   async getUser (token) {
     return this
-      ._request(
+      ._requestWithToken(
         `${this.baseUrl}/api/auth/user`,
         {
           headers: {
@@ -168,7 +199,7 @@ export default class Api {
     },
   ) {
     return this
-      ._request(
+      ._requestWithToken(
         `${this.baseUrl}/api/auth/user`,
         {
           body: JSON.stringify({
