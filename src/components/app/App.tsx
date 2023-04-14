@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './App.module.css';
 import AppHeader from '../../components/app-header/AppHeader';
-import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import {Route, Routes, useLocation} from 'react-router-dom';
+import RoutingModal from '../../components/routing-modal/RoutingModal';
 import BurgerConstructorPage from "../../pages/burger-constructor-page/BurgerConstructorPage";
 import LoginPage from "../../pages/login-page/LoginPage";
 import RegisterPage from "../../pages/register-page/RegisterPage";
@@ -11,23 +12,28 @@ import ProfilePage from "../../pages/profile-page/ProfilePage";
 import NotFoundPage from "../../pages/not-found-page/NotFoundPage";
 import OrderFeedPage from "../../pages/order-feed-page/OrderFeedPage";
 import {ProtectedRoute} from "../protected-route/ProtectedRoute";
-import IngredientDetails from "../ingredient-details/IngredientDetails";
 import { getIngredients } from "../../services/actions/ingredients";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import IngredientPage from '../../pages/ingredient-page/IngredientPage';
 
 export default function App() {
   const dispatch = useDispatch();
+
+  // @ts-ignore
+  const { items } = useSelector((state) => state.ingredients);
 
   React.useEffect(() => {
     // @ts-ignore
     dispatch(getIngredients());
   }, [dispatch]);
 
+  const location = useLocation();
+  const background = location.state?.background;
+
   return (
     <div className={styles.page}>
-      <Router>
         <AppHeader />
-        <Routes>
+        <Routes location={background || location}>
           <Route path="/" element={<BurgerConstructorPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
@@ -45,7 +51,10 @@ export default function App() {
               )}
               path="/profile"
           />
-          <Route path="/ingredients/:id" element={<IngredientDetails />} />
+          <Route
+              element={items.length && <IngredientPage />}
+              path="/ingredients/:id"
+          />
           <Route
             element={(
               <ProtectedRoute>
@@ -54,9 +63,12 @@ export default function App() {
             )}
             path="/order-feed"
           />
-          <Route path='*' element={<NotFoundPage />}/>
+          <Route
+              path="*"
+              element={<NotFoundPage />}
+          />
         </Routes>
-      </Router>
+        <RoutingModal />
     </div>
   );
 }
