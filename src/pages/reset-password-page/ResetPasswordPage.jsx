@@ -37,7 +37,6 @@ export default function ResetPasswordPage() {
           onChange={(event) => setToken(event.target.value)}
           name={'token'}
           placeholder="Введите код из письма"
-          isIcon={false}
           value={token}
         />
         <Button htmlType="submit" type="primary" size="medium">

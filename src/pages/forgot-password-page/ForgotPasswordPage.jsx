@@ -24,7 +24,6 @@ export default function ForgotPasswordPage() {
         <EmailInput
           name={'email'}
           placeholder="Укажите e-mail"
-          isIcon={false}
           onChange={(event) => setEmail(event.target.value)}
           value={email}
         />

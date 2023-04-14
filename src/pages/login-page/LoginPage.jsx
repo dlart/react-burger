@@ -4,35 +4,42 @@ import {
   EmailInput,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux'
+import {
+  useDispatch,
+  useSelector,
+} from 'react-redux'
 import styles from './login-page.module.css';
 import { Link } from 'react-router-dom'
 import { login } from '../../services/actions/user';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const {
+    isLoggedIn,
+    loginRequestFailed,
+    loginRequestSuccess,
+  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   
-  if (isLoggedIn) {
+  if (loginRequestSuccess) {
     navigate('/', {replace: true});
-    
-    return null;
   }
   
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     dispatch(login({
       email,
       password,
     }));
   
-    navigate('/', {replace: true});
+    if (isLoggedIn) {
+      navigate('/', { replace: true });
+    }
   }
 
   return (
@@ -44,10 +51,15 @@ export default function LoginPage() {
         <div className="text text_type_main-medium pt-2">
           Вход
         </div>
+        {
+          loginRequestFailed
+          && (
+            <p className={styles.error}>Ошибка авторизации</p>
+          )
+        }
         <EmailInput
           onChange={(event) => setEmail(event.target.value)}
           name={'email'}
-          isIcon={false}
           value={email}
         />
         <PasswordInput

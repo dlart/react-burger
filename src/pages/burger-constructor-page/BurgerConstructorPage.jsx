@@ -44,11 +44,6 @@ export default function BurgerConstructorPage() {
     state => state.order
   );
 
-  React.useEffect(() => {
-    // @ts-ignore
-    dispatch(getIngredients());
-  }, [dispatch]);
-
   const { closeModal: closeIngredientsModal } = ingredientSlice.actions;
 
   const { closeModal: closeOrderModal } = orderSlice.actions;

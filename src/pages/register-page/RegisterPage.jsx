@@ -47,13 +47,11 @@ export default function RegisterPage() {
           onChange={(event) => setName(event.target.value)}
           name={'name'}
           placeholder="Имя"
-          isIcon={false}
           value={name}
         />
         <EmailInput
           onChange={(event) => setEmail(event.target.value)}
           name={'email'}
-          isIcon={false}
           value={email}
         />
         <PasswordInput

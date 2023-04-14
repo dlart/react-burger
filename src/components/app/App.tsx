@@ -8,12 +8,21 @@ import RegisterPage from "../../pages/register-page/RegisterPage";
 import ForgotPasswordPage from "../../pages/forgot-password-page/ForgotPasswordPage";
 import ResetPasswordPage from "../../pages/reset-password-page/ResetPasswordPage";
 import ProfilePage from "../../pages/profile-page/ProfilePage";
-import IngredientPage from "../../pages/ingredient-page/IngredientPage";
 import NotFoundPage from "../../pages/not-found-page/NotFoundPage";
 import OrderFeedPage from "../../pages/order-feed-page/OrderFeedPage";
 import {ProtectedRoute} from "../protected-route/ProtectedRoute";
+import IngredientDetails from "../ingredient-details/IngredientDetails";
+import { getIngredients } from "../../services/actions/ingredients";
+import {useDispatch} from "react-redux";
 
 export default function App() {
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    // @ts-ignore
+    dispatch(getIngredients());
+  }, [dispatch]);
+
   return (
     <div className={styles.page}>
       <Router>
@@ -36,7 +45,7 @@ export default function App() {
               )}
               path="/profile"
           />
-          <Route path="/ingredients/:id" element={<IngredientPage />} />
+          <Route path="/ingredients/:id" element={<IngredientDetails />} />
           <Route
             element={(
               <ProtectedRoute>
