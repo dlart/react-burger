@@ -23,12 +23,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
-  if (isLoggedIn) {
-    navigate('/', {replace: true});
-    
-    return null;
-  }
-  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
