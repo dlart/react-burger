@@ -51,7 +51,7 @@ export default class Api {
         }
         localStorage.setItem('accessToken', refreshData.accessToken);
         localStorage.setItem('refreshToken', refreshData.refreshToken);
-        options.headers.authorization = refreshData.accessToken;
+        options.headers.Authorization = refreshData.accessToken;
         const res = await fetch(url, options); //повторяем запрос
         return await this._checkResponse(res);
       } else {

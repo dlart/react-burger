@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
   useDispatch,
   useSelector,
@@ -20,14 +20,9 @@ import BurgerConstructorIngredient from '../burger-constructor-ingredient/Burger
 import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
 import ingredientsSlice from '../../services/reducers/ingredients';
 import { createOrder } from '../../services/actions/order';
-import { getUser } from '../../services/actions/user';
 
 export default function BurgerConstructor() {
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getUser());
-    }, [dispatch]);
 
     const { isLoggedIn } = useSelector(state => state.user);
 

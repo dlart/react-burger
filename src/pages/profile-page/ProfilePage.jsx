@@ -15,7 +15,7 @@ import {
   useSelector,
 } from 'react-redux'
 import { logout } from '../../services/actions/user'
-import { getUser, updateUser } from '../../services/actions/user'
+import { updateUser } from '../../services/actions/user'
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -34,14 +34,12 @@ export default function ProfilePage() {
   });
 
   useEffect(() => {
-    dispatch(getUser());
-  
     setForm({
       name,
       email,
       password,
     });
-  }, [dispatch]);
+  }, [dispatch, name, email, password]);
   
   function onFormChange(event) {
     const fieldName = event
@@ -112,9 +110,9 @@ export default function ProfilePage() {
             </NavLink>
           </li>
           <li>
-            <a href="#" onClick={handleLogout}>
+            <button onClick={handleLogout}>
               Выход
-            </a>
+            </button>
           </li>
         </ul>
         <p className={styles.help}>
