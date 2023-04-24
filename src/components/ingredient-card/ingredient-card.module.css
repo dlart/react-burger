@@ -3,10 +3,17 @@
   flex: 1;
   max-width: 274px;
   position: relative;
+  text-decoration: none;
+}
+
+.link {
+  text-decoration: none;
 }
 
 .name {
   text-align: center;
+  text-decoration: none;
+  color: white;
 }
 
 .price {
@@ -15,4 +22,6 @@
   flex-direction: row;
   gap: 10px;
   justify-content: center;
+  text-decoration: none;
+  color: white;
 }

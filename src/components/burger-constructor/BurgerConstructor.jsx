@@ -19,10 +19,12 @@ import {
 import BurgerConstructorIngredient from '../burger-constructor-ingredient/BurgerConstructorIngredient'
 import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
 import ingredientsSlice from '../../services/reducers/ingredients';
-import { createOrder } from '../../services/actions/order'
+import { createOrder } from '../../services/actions/order';
 
 export default function BurgerConstructor() {
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+
+    const { isLoggedIn } = useSelector(state => state.user);
 
     const {
         decreaseCount,
@@ -36,6 +38,18 @@ export default function BurgerConstructor() {
         ingredients,
     } = useSelector(state => state.burgerConstructor);
 
+    const getSelectedIngredientsIds = useMemo(() => {
+
+        if (bun._id === undefined) {
+            return ingredients.map(ingredient => ingredient._id);
+        }
+
+        return [
+            bun._id,
+            ...ingredients.map(ingredient => ingredient._id),
+        ]
+    }, [bun, ingredients]);
+console.log(getSelectedIngredientsIds);
     const totalPrice = useMemo(
       () => {
         return _.isEmpty(bun)
@@ -105,11 +119,7 @@ export default function BurgerConstructor() {
     });
 
     const handlerCreateOrder = () => {
-      const ids = [
-        bun._id,
-        ...ingredients.map(ingredient => ingredient._id),
-      ];
-      dispatch(createOrder(ids));
+      dispatch(createOrder(getSelectedIngredientsIds));
     };
 
     const generateItemHash = () => Math.floor(Math.random() * 10000);
@@ -198,6 +208,7 @@ export default function BurgerConstructor() {
             </span>
             <Button
               extraClass="ml-10"
+              disabled={!isLoggedIn || getSelectedIngredientsIds.length === 0}
               htmlType="button"
               onClick={handlerCreateOrder}
               size="large"

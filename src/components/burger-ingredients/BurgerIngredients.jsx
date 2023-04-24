@@ -1,12 +1,10 @@
 import React, { useMemo, useRef, useState, } from 'react'
 import {
-  useDispatch,
   useSelector,
 } from 'react-redux';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './burger-ingredients.module.css';
 import IngredientCard from '../ingredient-card/IngredientCard';
-import ingredientSlice from '../../services/reducers/ingredient';
 import {
   INGREDIENT_TYPE_BUN,
   INGREDIENT_TYPE_MAIN,
@@ -20,16 +18,12 @@ const typesMap = {
 };
 
 export default function BurgerIngredients() {
-  const dispatch = useDispatch();
-
   const [
     tab,
     setTab,
   ] = useState(INGREDIENT_TYPE_BUN);
 
   const { items: ingredients } = useSelector(state => state.ingredients);
-
-  const { openModal } = ingredientSlice.actions;
 
   const groupIngredients = (ingredients) => {
     const ingredientsByType = {};
@@ -120,7 +114,6 @@ export default function BurgerIngredients() {
                     <IngredientCard
                       ingredient={ingredient}
                       key={ingredient._id}
-                      onClick={() => dispatch(openModal(ingredient))}
                     />
                   );
                 })}

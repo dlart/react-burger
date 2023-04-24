@@ -1,113 +1,91 @@
 import React from 'react';
-import {
-    useDispatch,
-    useSelector,
-} from 'react-redux';
-import { getIngredients } from '../../services/actions/ingredients';
-import ingredientSlice from '../../services/reducers/ingredient';
-import orderSlice from '../../services/reducers/order';
 import styles from './App.module.css';
 import AppHeader from '../../components/app-header/AppHeader';
-import BurgerIngredients from '../../components/burger-ingredients/BurgerIngredients';
-import BurgerConstructor from '../../components/burger-constructor/BurgerConstructor';
-import Modal from "../modal/Modal";
-import IngredientDetails from "../ingredient-details/IngredientDetails";
-import OrderDetails from "../order-details/OrderDetails";
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
-
-// @ts-ignore
-function ingredientSelector(state) {
-  return state.ingredient;
-}
-
-// @ts-ignore
-function ingredientsSelector(state) {
-  return state.ingredients;
-}
+import {Route, Routes, useLocation} from 'react-router-dom';
+import RoutingModal from '../../components/routing-modal/RoutingModal';
+import BurgerConstructorPage from "../../pages/burger-constructor-page/BurgerConstructorPage";
+import LoginPage from "../../pages/login-page/LoginPage";
+import RegisterPage from "../../pages/register-page/RegisterPage";
+import ForgotPasswordPage from "../../pages/forgot-password-page/ForgotPasswordPage";
+import ResetPasswordPage from "../../pages/reset-password-page/ResetPasswordPage";
+import ProfilePage from "../../pages/profile-page/ProfilePage";
+import NotFoundPage from "../../pages/not-found-page/NotFoundPage";
+import OrderFeedPage from "../../pages/order-feed-page/OrderFeedPage";
+import {ProtectedRoute} from "../protected-route/ProtectedRoute";
+import {OnlyUnAuthRoute} from "../only-un-auth-route/OnlyUnAuthRoute";
+import { getIngredients } from "../../services/actions/ingredients";
+import {useDispatch, useSelector} from "react-redux";
+import IngredientPage from '../../pages/ingredient-page/IngredientPage';
+import {getUser} from "../../services/actions/user";
+import { ROUTES } from '../../constants';
 
 export default function App() {
   const dispatch = useDispatch();
 
-  const {
-    request: ingredientsRequest,
-    requestFailed: ingredientsRequestFailed,
-    requestSuccess: ingredientsRequestSuccess,
-  } = useSelector(ingredientsSelector);
-
-  const {
-    item: ingredient,
-    modalOpen: ingredientModalOpen,
-  } = useSelector(ingredientSelector);
-
-  const {
-    number: orderNumber,
-    modalOpen: orderModalOpen,
-  } = useSelector(
-    // @ts-ignore
-    state => state.order
-  );
+  // @ts-ignore
+  const { items } = useSelector((state) => state.ingredients);
 
   React.useEffect(() => {
     // @ts-ignore
     dispatch(getIngredients());
+    // @ts-ignore
+    dispatch(getUser());
   }, [dispatch]);
 
-  const { closeModal: closeIngredientsModal } = ingredientSlice.actions;
-
-  const { closeModal: closeOrderModal } = orderSlice.actions;
+  const location = useLocation();
+  const background = location.state?.background;
 
   return (
     <div className={styles.page}>
         <AppHeader />
-        <main className={`${styles.main} pl-10 pr-10`}>
-            {
-                ingredientsRequest
-                && !ingredientsRequestFailed
-                && !ingredientsRequestSuccess
-                && (
-                    <h1>Загрузка ингредиентов...</h1>
-                )
-            }
-            {
-                !ingredientsRequest
-                && ingredientsRequestFailed
-                && !ingredientsRequestSuccess
-                && (
-                    <h1>Что-то пошло не так...</h1>
-                )
-            }
-            {
-                !ingredientsRequest
-                && !ingredientsRequestFailed
-                && ingredientsRequestSuccess
-                && (
-                    <DndProvider backend={HTML5Backend}>
-                        <section>
-                            <BurgerIngredients />
-                        </section>
-                        <section>
-                            <BurgerConstructor />
-                        </section>
-                    </DndProvider>
-                )
-            }
-            {
-                ingredientModalOpen && (
-                <Modal
-                    onClose={() => dispatch(closeIngredientsModal())}
-                    title='Детали ингредиента'
-                >
-                    <IngredientDetails ingredient={ingredient}/>
-                </Modal>
+        <Routes location={background || location}>
+          <Route path={ROUTES.INDEX_ROUTE} element={<BurgerConstructorPage />} />
+          <Route path={ROUTES.LOGIN_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                <LoginPage />
+              </OnlyUnAuthRoute>
+          )} />
+          <Route path={ROUTES.REGISTER_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                  <RegisterPage />
+              </OnlyUnAuthRoute>
+          )} />
+          <Route path={ROUTES.FORGOT_PASSWORD_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                <ForgotPasswordPage />
+              </OnlyUnAuthRoute>
+          )} />
+          <Route path={ROUTES.RESET_PASSWORD_ROUTE} element={(
+              <OnlyUnAuthRoute>
+                <ResetPasswordPage />
+              </OnlyUnAuthRoute>
+          )} />
+          <Route
+              element={(
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              )}
+              path={ROUTES.PROFILE_ROUTE}
+          />
+          <Route
+              element={items.length && <IngredientPage />}
+              path={ROUTES.INGREDIENT_ROUTE}
+          />
+          <Route
+            element={(
+              <ProtectedRoute>
+                <OrderFeedPage />
+              </ProtectedRoute>
             )}
-            {
-                orderModalOpen && (
-                    <Modal onClose={() => dispatch(closeOrderModal())}>
-                        <OrderDetails id={orderNumber} />
-                    </Modal>
-                )}
-        </main>
+            path={ROUTES.ORDER_FEED_ROUTE}
+          />
+          <Route
+              path="*"
+              element={<NotFoundPage />}
+          />
+        </Routes>
+        <RoutingModal />
     </div>
   );
 }

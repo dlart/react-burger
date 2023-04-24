@@ -10,11 +10,13 @@ import styles from './ingredient-card.module.css';
 import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
 import ingredientsSlice from '../../services/reducers/ingredients';
+import { Link, useLocation } from 'react-router-dom'
 
 export default function IngredientCard({
   ingredient,
   onClick,
 }) {
+  const location = useLocation();
   const dispatch = useDispatch();
 
   const { addIngredient } = burgerConstructorSlice.actions
@@ -38,28 +40,40 @@ export default function IngredientCard({
   });
 
   return (
-    <li
-      className={styles.ingredient}
-      onClick={onClick}
-      ref={ref}
-      style={{opacity}}
-    >
-      <Counter count={ingredient.count} />
-      <img
-        alt={ingredient.name}
-        className="ml-4 mr-4"
-        src={ingredient.image}
-      />
-      <div className={`${styles.price} mt-1`}>
-        <span className="text text_type_digits-default">
-          {ingredient.price}
-        </span>
-        <CurrencyIcon type="primary"/>
-      </div>
-      <div className={`${styles.name} mt-1 text text_type_main-default`}>
-        {ingredient.name}
-      </div>
-    </li>
+    <>
+      {ingredient && (
+        <li
+          className={styles.ingredient}
+          onClick={onClick}
+          ref={ref}
+          style={{opacity}}
+        >
+          <Link
+            className={styles.link}
+            to={{
+              pathname: `/ingredients/${ingredient._id}`,
+            }}
+            state={{ background: location }}
+          >
+            <Counter count={ingredient.count} />
+            <img
+              alt={ingredient.name}
+              className="ml-4 mr-4"
+              src={ingredient.image}
+            />
+            <div className={`${styles.price} mt-1`}>
+              <span className="text text_type_digits-default">
+                {ingredient.price}
+              </span>
+              <CurrencyIcon type="primary"/>
+            </div>
+            <div className={`${styles.name} mt-1 text text_type_main-default`}>
+              {ingredient.name}
+            </div>
+          </Link>
+        </li>
+      )}
+    </>
   );
 }
 
