@@ -70,7 +70,6 @@ const BurgerConstructorPage: FC = () => {
       }
       {
         orderModalOpen && (
-          /** @ts-ignore */
           <Modal title={''} onClose={() => dispatch(closeOrderModal())}>
             <OrderDetails id={orderNumber} />
           </Modal>

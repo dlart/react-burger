@@ -56,7 +56,7 @@ const BurgerConstructorIngredient: FC<IBurgerConstructorIngredientProps> = ({
   });
 
   const handleItemDelete = (
-    id: number,
+    id: string,
     index: number,
   ) => {
     /** @ts-ignore */
@@ -71,7 +71,6 @@ const BurgerConstructorIngredient: FC<IBurgerConstructorIngredientProps> = ({
     <li ref={ref}>
       <DragIcon type="primary" />
       <ConstructorElement
-        /** @ts-ignore */
         handleClose={() => {handleItemDelete(ingredient._id, index)}}
         isLocked={false}
         price={ingredient.price}

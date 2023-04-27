@@ -41,32 +41,27 @@ const App: FC = () => {
         <Routes location={background || location}>
           <Route path={ROUTES.INDEX_ROUTE} element={<BurgerConstructorPage />} />
           <Route path={ROUTES.LOGIN_ROUTE} element={(
-              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                 <LoginPage />
               </OnlyUnAuthRoute>
           )} />
           <Route path={ROUTES.REGISTER_ROUTE} element={(
-              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                   <RegisterPage />
               </OnlyUnAuthRoute>
           )} />
           <Route path={ROUTES.FORGOT_PASSWORD_ROUTE} element={(
-              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                 <ForgotPasswordPage />
               </OnlyUnAuthRoute>
           )} />
           <Route path={ROUTES.RESET_PASSWORD_ROUTE} element={(
-              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                 <ResetPasswordPage />
               </OnlyUnAuthRoute>
           )} />
           <Route
               element={(
-                /** @ts-ignore */
                 <ProtectedRoute>
                   <ProfilePage />
                 </ProtectedRoute>
@@ -79,7 +74,6 @@ const App: FC = () => {
           />
           <Route
             element={(
-              /** @ts-ignore */
               <ProtectedRoute>
                 <OrderFeedPage />
               </ProtectedRoute>

@@ -24,7 +24,6 @@ const RoutingModal: FC = () => {
       {items.length && background && (
       <Routes>
         <Route path={`/ingredients/:id`}  element={
-          /** @ts-ignore */
           <Modal title={"Детали ингредиента"} onClose={onModalClose}>
             <IngredientDetails />
           </Modal>

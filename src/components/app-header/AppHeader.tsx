@@ -14,8 +14,7 @@ const AppHeader: FC = () => {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/"
-              /** @ts-ignore */
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
             >
               <ProfileIcon type="secondary" />
               <span className="ml-2 text text_type_main-default">
@@ -26,8 +25,7 @@ const AppHeader: FC = () => {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/order-feed"
-              /** @ts-ignore */
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
             >
               <ProfileIcon type="secondary" />
               <span className="ml-2 text text_type_main-default">
@@ -47,8 +45,7 @@ const AppHeader: FC = () => {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/profile"
-              /** @ts-ignore */
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
             >
               <ProfileIcon type="secondary" />
               <span className="ml-2 text text_type_main-default">

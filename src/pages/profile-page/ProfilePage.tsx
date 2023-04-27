@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState, FC, SyntheticEvent} from 'react'
+import React, {useEffect, useMemo, useState, FC, SyntheticEvent, ChangeEvent} from 'react'
 import styles from './profile-page.module.css'
 import {
   NavLink,
@@ -42,14 +42,12 @@ const ProfilePage: FC = () => {
     });
   }, [dispatch, name, email, password]);
   
-  function onFormChange(event: SyntheticEvent): void {
+  function onFormChange(event: ChangeEvent<{name: string, value: string}>): void {
     const fieldName = event
       .target
-      // @ts-ignore
       .name;
     const fieldValue = event
       .target
-      // @ts-ignore
       .value;
     
     setForm({
@@ -103,8 +101,7 @@ const ProfilePage: FC = () => {
         <ul className={`${styles.menu} text text_type_main-medium`}>
           <li>
             <NavLink
-              /** @ts-ignore */
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
               to="/profile"
             >
               Профиль

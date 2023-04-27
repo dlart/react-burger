@@ -1,17 +1,17 @@
-import React, {FC, useCallback, useEffect,} from 'react';
+import React, {FC, ReactNode, useCallback, useEffect,} from 'react';
 import {createPortal} from 'react-dom';
 import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './modal.module.css';
 import ModalOverlay from '../modal-overlay/ModalOverlay';
 
-const modalRoot: HTMLElement | null = document.getElementById('modal-root');
+const modalRoot = document.getElementById('modal-root') as Element;
 
 interface IModalProps {
-    onClose?: () => void;
+    onClose?: () => void | undefined | {};
     title: string;
+    children: ReactNode;
 }
 
-// @ts-ignore
 const Modal: FC<IModalProps> = ({children, onClose, title}) => {
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if ('Escape' !== e.code) return;
@@ -26,7 +26,6 @@ const Modal: FC<IModalProps> = ({children, onClose, title}) => {
   }, [handleKeyDown]);
 
   return createPortal(
-    /** @ts-ignore */
     <ModalOverlay onClose={onClose}>
       <div
         className={`${styles.modal} pb-30 pl-10 pr-10 pt-15`}
@@ -50,7 +49,6 @@ const Modal: FC<IModalProps> = ({children, onClose, title}) => {
         </div>
       </div>
     </ModalOverlay>,
-      /** @ts-ignore */
     modalRoot,
   );
 };

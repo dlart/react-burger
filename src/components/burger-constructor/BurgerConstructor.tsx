@@ -105,7 +105,7 @@ const BurgerConstructor: FC = () => {
     const [
       bottomBunStyle,
       dropBottomBunTarget,
-    ] = useDrop({
+    ]: {bottomBunStyle: string, dropBottomBunTarget: Element} = useDrop({
       accept: INGREDIENT_TYPE_BUN,
       collect: monitor => ({ background: monitor.isOver() ? '#624172' : '#2f2f37' }),
       /** @ts-ignore */
@@ -197,7 +197,6 @@ const BurgerConstructor: FC = () => {
               <div
                 className={`${styles.bunPlaceholder} ${!_.isEmpty(bun) ? styles.bunPlaceholderFilled : null} constructor-element constructor-element_pos_bottom ml-6`}
                 ref={dropBottomBunTarget}
-                /** @ts-ignore */
                 style={bottomBunStyle}
               >
               {!_.isEmpty(bun)
