@@ -1,14 +1,12 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {
-  BurgerIcon,
-  ListIcon,
   Logo,
   ProfileIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './app-header.module.css';
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
 
-export default function AppHeader() {
+const AppHeader: FC = () => {
   return (
     <header className={`${styles.header} p-4`}>
       <nav>
@@ -16,6 +14,7 @@ export default function AppHeader() {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/"
+              /** @ts-ignore */
               className={(({isActive}) => isActive ? styles.active : null)}
             >
               <ProfileIcon type="secondary" />
@@ -27,6 +26,7 @@ export default function AppHeader() {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/order-feed"
+              /** @ts-ignore */
               className={(({isActive}) => isActive ? styles.active : null)}
             >
               <ProfileIcon type="secondary" />
@@ -47,6 +47,7 @@ export default function AppHeader() {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/profile"
+              /** @ts-ignore */
               className={(({isActive}) => isActive ? styles.active : null)}
             >
               <ProfileIcon type="secondary" />
@@ -60,3 +61,5 @@ export default function AppHeader() {
     </header>
   );
 };
+
+export default AppHeader;

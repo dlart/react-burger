@@ -1,3 +1,4 @@
+import React, {FC} from 'react';
 import Modal from '../../components/modal/Modal';
 import IngredientDetails from '../../components/ingredient-details/IngredientDetails';
 import {
@@ -5,12 +6,13 @@ import {
 } from 'react-redux';
 import { useNavigate, useLocation, Routes, Route } from "react-router-dom";
 
-const RoutingModal = () => {
+const RoutingModal: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   const background = location.state?.background;
 
+  // @ts-ignore
   const { items } = useSelector((state) => state.ingredients);
 
   const onModalClose = () => {
@@ -21,12 +23,13 @@ const RoutingModal = () => {
     <>
       {items.length && background && (
       <Routes>
-            <Route path={`/ingredients/:id`} element={
-                <Modal title={"Детали ингредиента"} onClose={onModalClose}>
-                  <IngredientDetails />
-                </Modal>
-            }>
-            </Route>
+        <Route path={`/ingredients/:id`}  element={
+          /** @ts-ignore */
+          <Modal title={"Детали ингредиента"} onClose={onModalClose}>
+            <IngredientDetails />
+          </Modal>
+        }>
+        </Route>
       </Routes>
       )}
     </>

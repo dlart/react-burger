@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {SyntheticEvent, FC} from 'react';
 import { useDispatch } from 'react-redux'
 import { useDrag } from 'react-dnd';
 import {
@@ -7,15 +7,20 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { INGREDIENT_TYPE_BUN } from '../../constants';
 import styles from './ingredient-card.module.css';
-import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
 import ingredientsSlice from '../../services/reducers/ingredients';
 import { Link, useLocation } from 'react-router-dom'
+import {IIngredient} from "../../types";
 
-export default function IngredientCard({
+interface IngredientCardProps {
+  ingredient: IIngredient;
+  onClick?: (e: SyntheticEvent) => void;
+}
+
+const IngredientCard: FC<IngredientCardProps> = ({
   ingredient,
   onClick,
-}) {
+}) => {
   const location = useLocation();
   const dispatch = useDispatch();
 
@@ -31,7 +36,9 @@ export default function IngredientCard({
       if(monitor.didDrop()
         && INGREDIENT_TYPE_BUN !== item.type
       ) {
+        /** @ts-ignore */
         dispatch(addIngredient(ingredient));
+        /** @ts-ignore */
         dispatch(increaseCount(ingredient._id));
       }
     },
@@ -55,7 +62,7 @@ export default function IngredientCard({
             }}
             state={{ background: location }}
           >
-            <Counter count={ingredient.count} />
+            <Counter count={Number(ingredient.count)} />
             <img
               alt={ingredient.name}
               className="ml-4 mr-4"
@@ -77,4 +84,4 @@ export default function IngredientCard({
   );
 }
 
-IngredientCard.propTypes = { ingredient: ingredientPropTypes.isRequired };
+export default IngredientCard;

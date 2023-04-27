@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState, FC, SyntheticEvent} from 'react'
 import styles from './register-page.module.css'
 import {
   Button,
@@ -10,11 +10,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { register } from '../../services/actions/user';
 
-export default function RegisterPage() {
+const RegisterPage: FC = () => {
   const {
-    isLoggedIn,
     registerRequestFailed,
     registerRequestSuccess
+  // @ts-ignore
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,9 +23,10 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
+    // @ts-ignore
     dispatch(register(
       email,
       password,
@@ -86,3 +87,5 @@ export default function RegisterPage() {
     </main>
   );
 }
+
+export default RegisterPage;

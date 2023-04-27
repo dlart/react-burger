@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, FC, SyntheticEvent } from 'react'
 import styles from './reset-password-page.module.css'
 import {
   Button,
@@ -8,11 +8,11 @@ import {
 import api from '../../services/api'
 import { Link } from 'react-router-dom'
 
-export default function ResetPasswordPage() {
+const ResetPasswordPage: FC = () => {
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     await api.passwordReset({
       password,
@@ -56,3 +56,5 @@ export default function ResetPasswordPage() {
     </main>
   );
 }
+
+export default ResetPasswordPage;

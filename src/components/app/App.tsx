@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './App.module.css';
-import AppHeader from '../../components/app-header/AppHeader';
+import AppHeader from '../app-header/AppHeader';
 import {Route, Routes, useLocation} from 'react-router-dom';
-import RoutingModal from '../../components/routing-modal/RoutingModal';
+import RoutingModal from '../routing-modal/RoutingModal';
 import BurgerConstructorPage from "../../pages/burger-constructor-page/BurgerConstructorPage";
 import LoginPage from "../../pages/login-page/LoginPage";
 import RegisterPage from "../../pages/register-page/RegisterPage";
@@ -19,7 +19,7 @@ import IngredientPage from '../../pages/ingredient-page/IngredientPage';
 import {getUser} from "../../services/actions/user";
 import { ROUTES } from '../../constants';
 
-export default function App() {
+const App: FC = () => {
   const dispatch = useDispatch();
 
   // @ts-ignore
@@ -41,27 +41,32 @@ export default function App() {
         <Routes location={background || location}>
           <Route path={ROUTES.INDEX_ROUTE} element={<BurgerConstructorPage />} />
           <Route path={ROUTES.LOGIN_ROUTE} element={(
+              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                 <LoginPage />
               </OnlyUnAuthRoute>
           )} />
           <Route path={ROUTES.REGISTER_ROUTE} element={(
+              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                   <RegisterPage />
               </OnlyUnAuthRoute>
           )} />
           <Route path={ROUTES.FORGOT_PASSWORD_ROUTE} element={(
+              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                 <ForgotPasswordPage />
               </OnlyUnAuthRoute>
           )} />
           <Route path={ROUTES.RESET_PASSWORD_ROUTE} element={(
+              /** @ts-ignore **/
               <OnlyUnAuthRoute>
                 <ResetPasswordPage />
               </OnlyUnAuthRoute>
           )} />
           <Route
               element={(
+                /** @ts-ignore */
                 <ProtectedRoute>
                   <ProfilePage />
                 </ProtectedRoute>
@@ -74,6 +79,7 @@ export default function App() {
           />
           <Route
             element={(
+              /** @ts-ignore */
               <ProtectedRoute>
                 <OrderFeedPage />
               </ProtectedRoute>
@@ -89,3 +95,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;

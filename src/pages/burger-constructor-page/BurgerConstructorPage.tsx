@@ -1,28 +1,20 @@
-import React from 'react';
+import React, {FC} from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import BurgerIngredients from '../../components/burger-ingredients/BurgerIngredients';
 import BurgerConstructor from '../../components/burger-constructor/BurgerConstructor';
 import Modal from '../../components/modal/Modal';
-import IngredientDetails from '../../components/ingredient-details/IngredientDetails';
 import OrderDetails from '../../components/order-details/OrderDetails';
 import { useDispatch, useSelector } from 'react-redux';
-import { getIngredients } from '../../services/actions/ingredients';
-import ingredientSlice from '../../services/reducers/ingredient';
 import orderSlice from '../../services/reducers/order';
 import styles from './burger-constructor-page.module.css';
-
-// @ts-ignore
-function ingredientSelector(state) {
-  return state.ingredient;
-}
 
 // @ts-ignore
 function ingredientsSelector(state) {
   return state.ingredients;
 }
 
-export default function BurgerConstructorPage() {
+const BurgerConstructorPage: FC = () => {
   const dispatch = useDispatch();
 
   const {
@@ -32,19 +24,12 @@ export default function BurgerConstructorPage() {
   } = useSelector(ingredientsSelector);
 
   const {
-    item: ingredient,
-    modalOpen: ingredientModalOpen,
-  } = useSelector(ingredientSelector);
-
-  const {
     number: orderNumber,
     modalOpen: orderModalOpen,
   } = useSelector(
     // @ts-ignore
     state => state.order
   );
-
-  const { closeModal: closeIngredientsModal } = ingredientSlice.actions;
 
   const { closeModal: closeOrderModal } = orderSlice.actions;
 
@@ -84,18 +69,9 @@ export default function BurgerConstructorPage() {
         )
       }
       {
-        ingredientModalOpen && (
-          <Modal
-            onClose={() => dispatch(closeIngredientsModal())}
-            title='Детали ингредиента'
-          >
-            <IngredientDetails ingredient={ingredient}/>
-          </Modal>
-        )
-      }
-      {
         orderModalOpen && (
-          <Modal onClose={() => dispatch(closeOrderModal())}>
+          /** @ts-ignore */
+          <Modal title={''} onClose={() => dispatch(closeOrderModal())}>
             <OrderDetails id={orderNumber} />
           </Modal>
         )
@@ -103,3 +79,5 @@ export default function BurgerConstructorPage() {
     </>
   );
 }
+
+export default BurgerConstructorPage;
