@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, {useEffect, useMemo, useState, FC, SyntheticEvent, ChangeEvent} from 'react'
 import styles from './profile-page.module.css'
 import {
   NavLink,
@@ -17,7 +17,7 @@ import {
 import { logout } from '../../services/actions/user'
 import { updateUser } from '../../services/actions/user'
 
-export default function ProfilePage() {
+const ProfilePage: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -25,6 +25,7 @@ export default function ProfilePage() {
     email,
     name,
     password,
+  // @ts-ignore
   } = useSelector(state => state.user.user);
   
   const [form, setForm] = useState({
@@ -41,7 +42,7 @@ export default function ProfilePage() {
     });
   }, [dispatch, name, email, password]);
   
-  function onFormChange(event) {
+  function onFormChange(event: ChangeEvent<{name: string, value: string}>): void {
     const fieldName = event
       .target
       .name;
@@ -66,7 +67,7 @@ export default function ProfilePage() {
     password,
   ]);
   
-  function onReset(event) {
+  function onReset(event: SyntheticEvent): void {
     event.preventDefault();
     
     setForm({
@@ -76,15 +77,17 @@ export default function ProfilePage() {
     });
   }
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
+    /** @ts-ignore */
     dispatch(logout());
     
     navigate('/login');
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: SyntheticEvent) => {
     event.preventDefault();
-    
+
+    /** @ts-ignore */
     dispatch(updateUser({
       email: form.email,
       name: form.name,
@@ -98,7 +101,7 @@ export default function ProfilePage() {
         <ul className={`${styles.menu} text text_type_main-medium`}>
           <li>
             <NavLink
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
               to="/profile"
             >
               Профиль
@@ -134,6 +137,7 @@ export default function ProfilePage() {
           <EmailInput
             name={'email'}
             placeholder="Логин"
+            /** @ts-ignore */
             icon="EditIcon"
             onChange={onFormChange}
             value={form.email}
@@ -170,3 +174,5 @@ export default function ProfilePage() {
     </main>
   );
 }
+
+export default ProfilePage;

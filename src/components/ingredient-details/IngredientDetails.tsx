@@ -1,14 +1,16 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './ingredient-details.module.css';
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import {IIngredient} from '../../types';
 
-export default function IngredientDetails() {
+const IngredientDetails: FC = () => {
   const { id } = useParams();
-  
+
+  /** @ts-ignore */
   const { items } = useSelector((state) => state.ingredients);
   
-  const ingredient = items.find((ingredient) => ingredient._id === id);
+  const ingredient = items.find((ingredient: IIngredient) => ingredient._id === id);
   
   return (
     <>
@@ -70,3 +72,5 @@ export default function IngredientDetails() {
     </>
   );
 }
+
+export default IngredientDetails;

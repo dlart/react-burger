@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, FC } from 'react';
 import { useDispatch } from 'react-redux';
 import {
   useDrag,
@@ -8,15 +8,20 @@ import {
   ConstructorElement,
   DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import ingredientPropTypes from '../../utils/ingredientPropTypes';
 import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
 import ingredientsSlice from '../../services/reducers/ingredients';
+import {IIngredient} from '../../types';
 
-export default function BurgerConstructorIngredient({
+interface IBurgerConstructorIngredientProps {
+    index: number;
+    ingredient: IIngredient;
+}
+
+const BurgerConstructorIngredient: FC<IBurgerConstructorIngredientProps> = ({
   index,
   ingredient,
-}) {
-  const ref = useRef();
+}) => {
+  const ref = useRef<HTMLLIElement|null>(null);
 
   const dispatch = useDispatch();
 
@@ -38,7 +43,9 @@ export default function BurgerConstructorIngredient({
       monitor,
     ) {
       if(monitor.didDrop()) {
+        /** @ts-ignore */
         dispatch(moveIngredient({
+          /** @ts-ignore */
           newIndex: monitor.getDropResult().index,
           oldIndex: index,
         }));
@@ -49,10 +56,12 @@ export default function BurgerConstructorIngredient({
   });
 
   const handleItemDelete = (
-    id,
-    index,
+    id: string,
+    index: number,
   ) => {
+    /** @ts-ignore */
     dispatch(decreaseCount(id));
+    /** @ts-ignore */
     dispatch(deleteIngredient(index));
   };
 
@@ -72,4 +81,4 @@ export default function BurgerConstructorIngredient({
   );
 };
 
-BurgerConstructorIngredient.propTypes = { ingredient: ingredientPropTypes.isRequired };
+export default BurgerConstructorIngredient;

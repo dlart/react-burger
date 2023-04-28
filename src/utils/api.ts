@@ -1,5 +1,7 @@
 export default class Api {
-  constructor (baseUrl) {
+  private readonly baseUrl: string;
+
+  constructor (baseUrl: string) {
     this.baseUrl = baseUrl
 
     this._checkResponse = this._checkResponse.bind(this);
@@ -17,7 +19,7 @@ export default class Api {
     this.updateUser = this.updateUser.bind(this);
   }
 
-  _checkResponse (response) {
+  _checkResponse <T>(response: Response): Promise<T> {
     return response.ok
       ? response.json()
       : response
@@ -25,33 +27,39 @@ export default class Api {
         .then((error) => Promise.reject(error));
   }
 
-  _request (
-    url,
-    options,
-  ) {
+  _request <T>(
+    url: string,
+    options: RequestInit,
+  ): Promise<T> {
     return fetch(
       url,
       options,
     )
-    .then(this._checkResponse);
+    .then(this._checkResponse<T>);
   }
   
-  async _requestWithToken (
-    url,
-    options
-  ) {
+  async _requestWithToken <T>(
+    url: string,
+    options: RequestInit,
+  ): Promise<T> {
     try {
       const response = await fetch(url, options);
       return await this._checkResponse(response);
-    } catch (error) {
+    } catch (error: any) {
       if (error.message === "jwt expired") {
-        const refreshData = await this.refreshToken(localStorage.getItem('refreshToken')); //обновляем токен
+        const refreshData = await this.refreshToken<{success: boolean, accessToken: string, refreshToken: string}>(localStorage.getItem('refreshToken') ?? '');
         if (!refreshData.success) {
           return Promise.reject(refreshData);
         }
         localStorage.setItem('accessToken', refreshData.accessToken);
         localStorage.setItem('refreshToken', refreshData.refreshToken);
-        options.headers.Authorization = refreshData.accessToken;
+        if (undefined === options.headers) {
+            options.headers = {};
+        }
+        options.headers = {
+            ...options.headers,
+            ...{Authorization: refreshData.accessToken}
+        };
         const res = await fetch(url, options); //повторяем запрос
         return await this._checkResponse(res);
       } else {
@@ -61,8 +69,8 @@ export default class Api {
   }
 
   async createOrder (
-    ingredientsIds,
-    token,
+    ingredientsIds: number[],
+    token: string,
   ) {
     return this
       ._requestWithToken(
@@ -81,13 +89,13 @@ export default class Api {
 
   async getIngredients () {
     return this
-      ._request(`${this.baseUrl}/api/ingredients`)
+      ._request<{data: object}>(`${this.baseUrl}/api/ingredients`, {})
       .then((result) => result.data);
   }
 
-  async getUser (token) {
+  async getUser(token: string): Promise<object> {
     return this
-      ._requestWithToken(
+      ._requestWithToken<{user: object}>(
         `${this.baseUrl}/api/auth/user`,
         {
           headers: {
@@ -97,13 +105,13 @@ export default class Api {
           method: 'GET',
         },
       )
-      .then(response => response.user);
+      .then((response) => response.user);
   }
 
   async login ({
     email,
     password,
-  }) {
+  }: {[name: string]: string}) {
     return this
       ._request(
         `${this.baseUrl}/api/auth/login`,
@@ -118,7 +126,7 @@ export default class Api {
       );
   }
 
-  async logout (refreshToken) {
+  async logout (refreshToken: string): Promise<Response> {
     return this
       ._request(
         `${this.baseUrl}/api/auth/logout`,
@@ -133,7 +141,7 @@ export default class Api {
   async passwordReset ({
     password,
     token,
-  }) {
+  }: {password: string, token: string}): Promise<Response> {
     return this
       ._request(
         `${this.baseUrl}/api/password-reset/reset`,
@@ -148,7 +156,7 @@ export default class Api {
       );
   }
 
-  async passwordResetRequest (email) {
+  async passwordResetRequest (email: string): Promise<Response> {
     return this
       ._request(
         `${this.baseUrl}/api/password-reset`,
@@ -160,7 +168,7 @@ export default class Api {
       );
   }
   
-  async refreshToken (refreshToken) {
+  async refreshToken <T>(refreshToken: string): Promise<T> {
     return this
       ._request(`${this.baseUrl}/api/auth/token`,
         {
@@ -175,7 +183,7 @@ export default class Api {
     email,
     name,
     password,
-  }) {
+  }: {[name: string]: string}) {
     return this
       ._request(`${this.baseUrl}/api/auth/register`,
         {
@@ -191,12 +199,12 @@ export default class Api {
   }
 
   async updateUser (
-    token,
+    token: string,
     {
       email,
       name,
       password,
-    },
+    }: {[name: string]: string},
   ) {
     return this
       ._requestWithToken(

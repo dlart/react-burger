@@ -1,25 +1,23 @@
-import React, {
-    useCallback,
-    useEffect,
-} from 'react';
-import { createPortal } from 'react-dom';
-import PropTypes from 'prop-types';
-import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import React, {FC, ReactNode, useCallback, useEffect,} from 'react';
+import {createPortal} from 'react-dom';
+import {CloseIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './modal.module.css';
 import ModalOverlay from '../modal-overlay/ModalOverlay';
 
-const modalRoot = document.getElementById('modal-root');
+const modalRoot = document.getElementById('modal-root') as Element;
 
-export default function Modal(props) {
-  const {
-    children,
-    onClose,
-    title,
-  } = props;
+interface IModalProps {
+    onClose?: () => void | undefined | {};
+    title: string;
+    children: ReactNode;
+}
 
-  const handleKeyDown = useCallback((e) => {
+const Modal: FC<IModalProps> = ({children, onClose, title}) => {
+  const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if ('Escape' !== e.code) return;
-    onClose();
+    if (undefined !== onClose) {
+        onClose();
+    }
   }, [onClose]);
 
   useEffect(() => {
@@ -31,6 +29,7 @@ export default function Modal(props) {
     <ModalOverlay onClose={onClose}>
       <div
         className={`${styles.modal} pb-30 pl-10 pr-10 pt-15`}
+        /** @ts-ignore */
         onKeyDown={handleKeyDown}
       >
         <div className={styles.title}>
@@ -54,8 +53,4 @@ export default function Modal(props) {
   );
 };
 
-Modal.propTypes = {
-    children: PropTypes.node.isRequired,
-    onClose: PropTypes.func.isRequired,
-    title: PropTypes.string,
-};
+export default Modal;

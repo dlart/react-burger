@@ -1,14 +1,12 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {
-  BurgerIcon,
-  ListIcon,
   Logo,
   ProfileIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './app-header.module.css';
-import { Link, NavLink } from 'react-router-dom'
+import { NavLink } from 'react-router-dom';
 
-export default function AppHeader() {
+const AppHeader: FC = () => {
   return (
     <header className={`${styles.header} p-4`}>
       <nav>
@@ -16,7 +14,7 @@ export default function AppHeader() {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/"
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
             >
               <ProfileIcon type="secondary" />
               <span className="ml-2 text text_type_main-default">
@@ -27,7 +25,7 @@ export default function AppHeader() {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/order-feed"
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
             >
               <ProfileIcon type="secondary" />
               <span className="ml-2 text text_type_main-default">
@@ -47,7 +45,7 @@ export default function AppHeader() {
           <li className={`${styles.menuItem} p-5 text text_type_main-default`}>
             <NavLink
               to="/profile"
-              className={(({isActive}) => isActive ? styles.active : null)}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
             >
               <ProfileIcon type="secondary" />
               <span className="ml-2 text text_type_main-default">
@@ -60,3 +58,5 @@ export default function AppHeader() {
     </header>
   );
 };
+
+export default AppHeader;

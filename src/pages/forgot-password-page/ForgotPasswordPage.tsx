@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useState, FC, SyntheticEvent} from 'react'
 import styles from './forgot-password-page.module.css'
 import {
   Button,
@@ -8,11 +8,11 @@ import { Link } from 'react-router-dom'
 import api from '../../services/api';
 import { useNavigate } from 'react-router-dom'
 
-export default function ForgotPasswordPage() {
+const ForgotPasswordPage: FC = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     await api.passwordResetRequest(email);
     navigate('/reset-password');
@@ -47,3 +47,5 @@ export default function ForgotPasswordPage() {
     </main>
   );
 }
+
+export default ForgotPasswordPage;

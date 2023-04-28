@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, FC } from 'react';
 import {
   useDispatch,
   useSelector,
@@ -20,10 +20,12 @@ import BurgerConstructorIngredient from '../burger-constructor-ingredient/Burger
 import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
 import ingredientsSlice from '../../services/reducers/ingredients';
 import { createOrder } from '../../services/actions/order';
+import {IIngredient} from '../../types';
 
-export default function BurgerConstructor() {
+const BurgerConstructor: FC = () => {
     const dispatch = useDispatch();
 
+    /** @ts-ignore */
     const { isLoggedIn } = useSelector(state => state.user);
 
     const {
@@ -33,35 +35,39 @@ export default function BurgerConstructor() {
 
     const { setBun } = burgerConstructorSlice.actions
 
+
     const {
         bun,
         ingredients,
-    } = useSelector(state => state.burgerConstructor);
+    } = useSelector(state => {
+        /** @ts-ignore */
+        return state.burgerConstructor
+    });
 
     const getSelectedIngredientsIds = useMemo(() => {
 
         if (bun._id === undefined) {
-            return ingredients.map(ingredient => ingredient._id);
+            return ingredients.map((ingredient: IIngredient) => ingredient._id);
         }
 
         return [
             bun._id,
-            ...ingredients.map(ingredient => ingredient._id),
+            ...ingredients.map((ingredient: IIngredient) => ingredient._id),
         ]
     }, [bun, ingredients]);
-console.log(getSelectedIngredientsIds);
+
     const totalPrice = useMemo(
       () => {
         return _.isEmpty(bun)
           ? (
             ingredients.length
-              ? ingredients.reduce((a, b) => a + b.price, 0)
+              ? ingredients.reduce((a: number, b: IIngredient) => a + b.price, 0)
               : 0
           )
           : (
             bun.price * 2
             + ingredients.reduce(
-              (a, b) => a + b.price,
+              (a: number, b: IIngredient) => a + b.price,
               0,
             )
           )
@@ -72,11 +78,14 @@ console.log(getSelectedIngredientsIds);
       ],
     );
 
-    const handleBunItemDrop = (newBun) => {
+    const handleBunItemDrop = (newBun: IIngredient) => {
       dispatch(decreaseCount(bun._id));
       dispatch(decreaseCount(bun._id));
+      /** @ts-ignore */
       dispatch(increaseCount(newBun._id));
+      /** @ts-ignore */
       dispatch(increaseCount(newBun._id));
+      /** @ts-ignore */
       dispatch(setBun(newBun));
     };
 
@@ -87,21 +96,27 @@ console.log(getSelectedIngredientsIds);
       accept: INGREDIENT_TYPE_BUN,
       collect: monitor => ({ background: monitor.isOver() ? '#624172' : '#2f2f37' }),
       drop(newBunItem) {
+        /** @ts-ignore */
         handleBunItemDrop(newBunItem);
       }
     });
 
+    /** @ts-ignore */
     const [
       bottomBunStyle,
       dropBottomBunTarget,
-    ] = useDrop({
+    ]: {bottomBunStyle: string, dropBottomBunTarget: Element} = useDrop({
       accept: INGREDIENT_TYPE_BUN,
       collect: monitor => ({ background: monitor.isOver() ? '#624172' : '#2f2f37' }),
-      drop(newBun) {
+      /** @ts-ignore */
+      drop(newBun: IIngredient) {
         dispatch(decreaseCount(bun._id));
         dispatch(decreaseCount(bun._id));
+        /** @ts-ignore */
         dispatch(increaseCount(newBun._id));
+        /** @ts-ignore */
         dispatch(increaseCount(newBun._id));
+        /** @ts-ignore */
         dispatch(setBun(newBun));
       },
       type: 'ingredient',
@@ -119,6 +134,7 @@ console.log(getSelectedIngredientsIds);
     });
 
     const handlerCreateOrder = () => {
+      /** @ts-ignore */
       dispatch(createOrder(getSelectedIngredientsIds));
     };
 
@@ -155,8 +171,8 @@ console.log(getSelectedIngredientsIds);
                   <ul className="mt-4">
                     {ingredients
                       .map((
-                        ingredient,
-                        index,
+                        ingredient: IIngredient,
+                        index: number,
                       ) => {
                         return (
                           <BurgerConstructorIngredient
@@ -221,3 +237,5 @@ console.log(getSelectedIngredientsIds);
       </>
     );
 };
+
+export default BurgerConstructor;

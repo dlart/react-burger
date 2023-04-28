@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {FC} from 'react';
 import styles from './App.module.css';
-import AppHeader from '../../components/app-header/AppHeader';
+import AppHeader from '../app-header/AppHeader';
 import {Route, Routes, useLocation} from 'react-router-dom';
-import RoutingModal from '../../components/routing-modal/RoutingModal';
+import RoutingModal from '../routing-modal/RoutingModal';
 import BurgerConstructorPage from "../../pages/burger-constructor-page/BurgerConstructorPage";
 import LoginPage from "../../pages/login-page/LoginPage";
 import RegisterPage from "../../pages/register-page/RegisterPage";
@@ -19,7 +19,7 @@ import IngredientPage from '../../pages/ingredient-page/IngredientPage';
 import {getUser} from "../../services/actions/user";
 import { ROUTES } from '../../constants';
 
-export default function App() {
+const App: FC = () => {
   const dispatch = useDispatch();
 
   // @ts-ignore
@@ -89,3 +89,5 @@ export default function App() {
     </div>
   );
 }
+
+export default App;

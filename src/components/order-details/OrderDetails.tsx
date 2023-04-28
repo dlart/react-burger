@@ -1,8 +1,11 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, {FC} from 'react';
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
-export default function OrderDetails({id}) {
+interface OrderDetailsProps {
+    id: number
+}
+
+const OrderDetails: FC<OrderDetailsProps> = ({id}) => {
   return (
     <>
       <div className="text text_type_digits-large">
@@ -24,4 +27,4 @@ export default function OrderDetails({id}) {
   );
 }
 
-OrderDetails.propTypes = { id: PropTypes.number.isRequired }
+export default OrderDetails;

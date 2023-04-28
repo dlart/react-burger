@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState, } from 'react'
+import React, { useMemo, useRef, useState, FC } from 'react'
 import {
   useSelector,
 } from 'react-redux';
@@ -10,25 +10,27 @@ import {
   INGREDIENT_TYPE_MAIN,
   INGREDIENT_TYPE_SAUCE,
 } from '../../constants';
+import {IIngredient} from "../../types";
 
-const typesMap = {
+const typesMap: Record<string, string> = {
   [INGREDIENT_TYPE_BUN]: 'Булки',
   [INGREDIENT_TYPE_MAIN]: 'Начинки',
   [INGREDIENT_TYPE_SAUCE]: 'Соусы',
 };
 
-export default function BurgerIngredients() {
+const BurgerIngredients:FC = () => {
   const [
     tab,
     setTab,
   ] = useState(INGREDIENT_TYPE_BUN);
 
+  /** @ts-ignore */
   const { items: ingredients } = useSelector(state => state.ingredients);
 
-  const groupIngredients = (ingredients) => {
-    const ingredientsByType = {};
+  const groupIngredients = (ingredients: Array<IIngredient>) => {
+    const ingredientsByType: Record<string, Array<IIngredient>> = {};
     for (const type of Object.keys(typesMap)) {
-      ingredientsByType[type] = ingredients.filter(ingredient => type === ingredient.type);
+      ingredientsByType[type] = ingredients.filter((ingredient: IIngredient): boolean => type === ingredient.type);
     }
     return ingredientsByType;
   };
@@ -38,26 +40,28 @@ export default function BurgerIngredients() {
     [ingredients],
   );
 
-  let refs = [];
+  let refs: Record<string, any> = [];
 
-  const handleTabClick = (type) => {
+  const handleTabClick = (type: string) => {
     setTab(type);
     refs[type].scrollIntoView({ behavior: 'smooth' });
   }
 
-  const containerRef = useRef();
+  const containerRef = useRef<HTMLElement>(null);
 
   const handleScroll = () => {
-    const containerPosition = containerRef
+    const current = containerRef.current;
+    
+    const containerPosition = current ? containerRef
       .current
       .getBoundingClientRect()
-      .top;
+      .top : null;
 
-    const categoriesPositions = {};
+    const categoriesPositions: Record<string, number> = {};
 
     Object
       .keys(typesMap)
-      .map(type => (categoriesPositions[type] = Math.abs(containerPosition - refs[type].getBoundingClientRect().top)));
+      .map(type => (categoriesPositions[type] = Math.abs(Number(containerPosition) - refs[type].getBoundingClientRect().top)));
 
     const minCategoryPosition = Math.min(...Object.values(categoriesPositions));
 
@@ -65,6 +69,7 @@ export default function BurgerIngredients() {
       .keys(categoriesPositions)
       .find(key => minCategoryPosition === categoriesPositions[key]);
 
+    /** @ts-ignore */
     setTab(currentTab);
   };
 
@@ -112,9 +117,9 @@ export default function BurgerIngredients() {
                 {ingredientsByType[type].map((ingredient) => {
                   return (
                     <IngredientCard
-                      ingredient={ingredient}
-                      key={ingredient._id}
-                    />
+                        ingredient={ingredient}
+                        key={ingredient._id}
+                        onClick={undefined}                    />
                   );
                 })}
               </ul>
@@ -125,3 +130,5 @@ export default function BurgerIngredients() {
     </>
   );
 }
+
+export default BurgerIngredients;

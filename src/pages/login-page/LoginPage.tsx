@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {SyntheticEvent, useState, FC} from 'react'
 import {
   Button,
   EmailInput,
@@ -13,11 +13,11 @@ import { Link } from 'react-router-dom'
 import { login } from '../../services/actions/user';
 import { useNavigate } from 'react-router-dom';
 
-export default function LoginPage() {
+const LoginPage: FC = () => {
   const {
     isLoggedIn,
     loginRequestFailed,
-    loginRequestSuccess,
+    /** @ts-ignore */
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,9 +25,10 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-  
+
+    /** @ts-ignore */
     dispatch(login({
       email,
       password,
@@ -95,3 +96,5 @@ export default function LoginPage() {
     </main>
   );
 }
+
+export default LoginPage;
