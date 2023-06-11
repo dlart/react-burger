@@ -1,8 +1,8 @@
 import React, {FC} from 'react';
-import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import {CheckMarkIcon} from '@ya.praktikum/react-developer-burger-ui-components';
 
 interface OrderDetailsProps {
-    id: number
+  id: number;
 }
 
 const OrderDetails: FC<OrderDetailsProps> = ({id}) => {
@@ -15,7 +15,7 @@ const OrderDetails: FC<OrderDetailsProps> = ({id}) => {
         Идентификатор заказа
       </div>
       <div className="mt-15">
-        <CheckMarkIcon type="primary" />
+        <CheckMarkIcon type="primary"/>
       </div>
       <div className="mt-15 text text_type_main-default">
         Ваш заказ начали готовить

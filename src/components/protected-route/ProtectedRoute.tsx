@@ -1,10 +1,9 @@
 import React, {FC} from 'react'
 import { Navigate, } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import {useAppSelector} from "../../hooks/useAppSelector";
 
 export const ProtectedRoute: FC<{children: any}> = ({ children }) => {
-  // @ts-ignore
-  const { isLoggedIn } = useSelector((state) => state.user);
+  const { isLoggedIn } = useAppSelector((state) => state.user);
   
   if (!isLoggedIn) {
     return <Navigate to="/login" replace />;

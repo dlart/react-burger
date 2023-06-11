@@ -1,0 +1,30 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.columns {
+    display: flex;
+    gap: 36px;
+}
+
+.column {
+    flex: 1 1 50%;
+}
+
+.columnTitle {
+    margin: 0 0 24px 0;
+}
+
+.columnNumbers {
+    column-gap: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: 300px;
+}
+
+.text {
+    color: #00CCCC;
+}

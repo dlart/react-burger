@@ -1,19 +1,7 @@
-import api from '../../services/api'
-import ingredientsSlice from '../reducers/ingredients'
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getIngredients as getIngredientsApi } from '../../utils/api';
 
-export const getIngredients = () => {
-  const {
-    request,
-    requestFailed,
-    requestSuccess,
-  } = ingredientsSlice.actions
-  
-  return dispatch => {
-    dispatch(request())
-    
-    api
-        .getIngredients()
-        .then(ingredients => dispatch(requestSuccess(ingredients)))
-        .catch(() => dispatch(requestFailed()))
-  }
-}
+export const getIngredients = createAsyncThunk(
+  'ingredients/getIngredients',
+  async () => (await getIngredientsApi()).data,
+);

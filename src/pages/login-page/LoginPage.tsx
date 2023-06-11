@@ -1,25 +1,17 @@
-import React, {SyntheticEvent, useState, FC} from 'react'
-import {
-  Button,
-  EmailInput,
-  PasswordInput,
-} from '@ya.praktikum/react-developer-burger-ui-components';
-import {
-  useDispatch,
-  useSelector,
-} from 'react-redux'
+import React, {FC, SyntheticEvent, useState} from 'react'
+import {Button, EmailInput, PasswordInput,} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './login-page.module.css';
-import { Link } from 'react-router-dom'
-import { login } from '../../services/actions/user';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom'
+import {loginUser} from '../../services/actions/user';
+import {useAppSelector} from '../../hooks/useAppSelector';
+import {useAppDispatch} from '../../hooks/useAppDispatch';
 
 const LoginPage: FC = () => {
   const {
     isLoggedIn,
     loginRequestFailed,
-    /** @ts-ignore */
-  } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -28,8 +20,7 @@ const LoginPage: FC = () => {
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    /** @ts-ignore */
-    dispatch(login({
+    dispatch(loginUser({
       email,
       password,
     }));

@@ -1,16 +1,42 @@
-export const API_BASE_URL = 'https://norma.nomoreparties.space';
+export const API_BASE = 'https://norma.nomoreparties.space';
 
-export const INGREDIENT_TYPE_BUN = 'bun';
-export const INGREDIENT_TYPE_MAIN = 'main';
-export const INGREDIENT_TYPE_SAUCE = 'sauce';
-
-export const ROUTES = {
-  INDEX_ROUTE: '/',
-  LOGIN_ROUTE: '/login',
-  REGISTER_ROUTE: '/register',
-  FORGOT_PASSWORD_ROUTE: '/forgot-password',
-  RESET_PASSWORD_ROUTE: '/reset-password',
-  PROFILE_ROUTE: '/profile',
-  INGREDIENT_ROUTE: '/ingredients/:id',
-  ORDER_FEED_ROUTE: '/order-feed',
+export const API = {
+  AUTH: {
+    LOGIN: API_BASE + '/api/auth/login',
+    LOGOUT: API_BASE + '/api/auth/logout',
+    REGISTER: API_BASE + '/api/auth/register',
+    TOKEN: API_BASE + '/api/auth/token',
+    USER: API_BASE + '/api/auth/user',
+  },
+  INGREDIENTS: API_BASE + '/api/ingredients',
+  ORDERS: API_BASE + '/api/orders',
+  PASSWORD_RESET: {
+    REQUEST: API_BASE + '/api/password-reset',
+    RESET: API_BASE + '/api/password-reset/reset',
+  },
 };
+
+export const INGREDIENT = {
+  BUN: 'bun',
+  MAIN: 'main',
+  SAUCE: 'sauce',
+};
+
+export const ROUTE = {
+  FORGOT_PASSWORD: '/forgot-password',
+  INDEX: '/',
+  INGREDIENT: '/ingredients/:id',
+  LOGIN: '/login',
+  ORDER_FEED: '/feed',
+  ORDER_FEED_DETAIL: '/feed/:id',
+  PROFILE: '/profile',
+  USER_ORDERS: '/profile/orders',
+  USER_ORDER_DETAIL: '/profile/orders/:orderNumber',
+  REGISTER: '/register',
+  RESET_PASSWORD: '/reset-password',
+};
+
+export const WEB_SOCKET_BASE = {
+  ORDERS: 'wss://norma.nomoreparties.space/orders/all',
+  USER_ORDERS: 'wss://norma.nomoreparties.space/orders',
+}

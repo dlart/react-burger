@@ -1,45 +1,38 @@
-import React, {SyntheticEvent, FC} from 'react';
-import { useDispatch } from 'react-redux'
-import { useDrag } from 'react-dnd';
-import {
-  Counter,
-  CurrencyIcon,
-} from '@ya.praktikum/react-developer-burger-ui-components';
-import { INGREDIENT_TYPE_BUN } from '../../constants';
+import React, {FC, SyntheticEvent} from 'react';
+import {useDrag} from 'react-dnd';
+import {Counter, CurrencyIcon,} from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './ingredient-card.module.css';
-import burgerConstructorSlice from '../../services/reducers/burgerConstructor';
-import ingredientsSlice from '../../services/reducers/ingredients';
-import { Link, useLocation } from 'react-router-dom'
-import {IIngredient} from "../../types";
+import {addIngredient} from '../../services/reducers/burgerConstructor';
+import {increaseCount} from '../../services/reducers/ingredients';
+import {Link, useLocation} from 'react-router-dom'
+import {IConstructorIngredient} from '../../types/IConstructorIngredient';
+import {useAppDispatch} from '../../hooks/useAppDispatch';
+import {INGREDIENT} from '../../constants';
 
 interface IngredientCardProps {
-  ingredient: IIngredient;
-  onClick?: (e: SyntheticEvent) => void;
+  ingredient: IConstructorIngredient;
+  onClick?: (event: SyntheticEvent) => void;
 }
 
 const IngredientCard: FC<IngredientCardProps> = ({
   ingredient,
   onClick,
 }) => {
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const { addIngredient } = burgerConstructorSlice.actions
-  const { increaseCount } = ingredientsSlice.actions
+  const location = useLocation();
 
   const [
-    { opacity },
-    ref,
+      {opacity},
+      ref,
   ] = useDrag({
-    collect: monitor => ({ opacity: monitor.isDragging() ? 0.5 : 1 }),
+    collect: monitor => ({opacity: monitor.isDragging() ? 0.5 : 1}),
     end(item, monitor) {
-      if(monitor.didDrop()
-        && INGREDIENT_TYPE_BUN !== item.type
+      if (INGREDIENT.BUN !== item.type
+        && monitor.didDrop()
       ) {
-        /** @ts-ignore */
-        dispatch(addIngredient(ingredient));
-        /** @ts-ignore */
-        dispatch(increaseCount(ingredient._id));
+          dispatch(addIngredient(ingredient));
+          dispatch(increaseCount(ingredient._id));
       }
     },
     item: ingredient,
@@ -57,12 +50,10 @@ const IngredientCard: FC<IngredientCardProps> = ({
         >
           <Link
             className={styles.link}
-            to={{
-              pathname: `/ingredients/${ingredient._id}`,
-            }}
-            state={{ background: location }}
+            state={{background: location}}
+            to={{pathname: `/ingredients/${ingredient._id}`}}
           >
-            <Counter count={Number(ingredient.count)} />
+            <Counter count={Number(ingredient.count)}/>
             <img
               alt={ingredient.name}
               className="ml-4 mr-4"
