@@ -10,10 +10,15 @@ import {useAppDispatch} from '../../hooks/useAppDispatch';
 const OrderFeedPage = () => {
     const dispatch = useAppDispatch();
 
-    const data = useAppSelector(state => state.orders.orders);
+    const ordersFeedData = useAppSelector(state => state.orders.orders);
+
+    const executedRef = React.useRef(false);
 
     useEffect(() => {
-        dispatch(ordersConnect(WEB_SOCKET_BASE.ORDERS));
+        if (!executedRef.current) {
+            executedRef.current = true;
+            dispatch(ordersConnect(WEB_SOCKET_BASE.ORDERS));
+        }
 
         return () => {
             dispatch(ordersDisconnect());
@@ -28,10 +33,10 @@ const OrderFeedPage = () => {
           </h1>
           <div className={styles.content}>
             <div className={styles.column}>
-              <OrderList data={data}/>
+              <OrderList ordersFeedData={ordersFeedData}/>
             </div>
             <div className={styles.column}>
-              <Statistics data={data}/>
+              <Statistics ordersFeedData={ordersFeedData}/>
             </div>
           </div>
         </section>

@@ -4,6 +4,7 @@ import {useAppSelector} from '../../hooks/useAppSelector';
 import {useAppDispatch} from '../../hooks/useAppDispatch';
 import {userOrdersConnect, userOrdersDisconnect} from '../../services/actions/userOrders';
 import {WEB_SOCKET_BASE} from '../../constants';
+import {ordersConnect} from "../../services/actions/orders";
 
 const ProfileOrders = (): JSX.Element => {
     const dispatch = useAppDispatch();
@@ -14,8 +15,13 @@ const ProfileOrders = (): JSX.Element => {
         .getItem('accessToken')
         ?.split('Bearer ')[1];
 
+    const executedRef = React.useRef(false);
+
     useEffect(() => {
-        dispatch(userOrdersConnect(WEB_SOCKET_BASE.USER_ORDERS + `?token=${token ?? ''}`));
+        if (!executedRef.current) {
+            executedRef.current = true;
+            dispatch(userOrdersConnect(WEB_SOCKET_BASE.USER_ORDERS + `?token=${token ?? ''}`));
+        }
 
         return () => {
             dispatch(userOrdersDisconnect());
@@ -24,7 +30,7 @@ const ProfileOrders = (): JSX.Element => {
 
     return (
         <div>
-            <OrderList data={userData !== undefined ? userData : null}/>
+            <OrderList ordersFeedData={userData !== undefined ? userData : null}/>
         </div>
     );
 };

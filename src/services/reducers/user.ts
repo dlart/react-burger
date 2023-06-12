@@ -85,6 +85,7 @@ const user = createSlice({
           state.request = false;
           state.requestFailed = false;
           state.requestSuccess = true;
+          state.isLoggedIn = true;
           state.user = {
             name: action.payload.user.name,
             email: action.payload.user.email,

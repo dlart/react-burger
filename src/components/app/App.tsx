@@ -15,22 +15,22 @@ import {ProtectedRoute} from '../protected-route/ProtectedRoute';
 import {OnlyUnAuthRoute} from '../only-un-auth-route/OnlyUnAuthRoute';
 import {getIngredients} from '../../services/actions/ingredients';
 import IngredientPage from '../../pages/ingredient-page/IngredientPage';
-import {getUser} from '../../services/actions/user';
 import {ROUTE} from '../../constants';
 import {useAppDispatch} from '../../hooks/useAppDispatch';
 import {useAppSelector} from '../../hooks/useAppSelector';
 import {RootState} from '../../services/store';
 import PageFeedDetail from '../../pages/page-feed-detail/PageFeedDetail';
+import {getUser} from '../../services/actions/user';
 
 const App: FC = () => {
     const dispatch = useAppDispatch();
 
-    const {items} = useAppSelector((state: RootState) => state.ingredients);
-
     React.useEffect(() => {
-        dispatch(getIngredients());
         dispatch(getUser());
+        dispatch(getIngredients());
     }, [dispatch]);
+
+    const {items} = useAppSelector((state: RootState) => state.ingredients);
 
     const location = useLocation();
 
@@ -84,9 +84,7 @@ const App: FC = () => {
                 />
                 <Route
                     element={(
-                        <ProtectedRoute>
-                            <OrderFeedPage/>
-                        </ProtectedRoute>
+                        <OrderFeedPage/>
                     )}
                     path={ROUTE.ORDER_FEED}
                 />

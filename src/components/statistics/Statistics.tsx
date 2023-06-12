@@ -2,14 +2,14 @@ import React, {useMemo} from 'react';
 import styles from './statistics.module.css';
 import {TWebSocketOrdersResponse} from '../../types/TWebSocketOrdersResponse';
 
-const Statistics = ({data}: { data: TWebSocketOrdersResponse | null }): JSX.Element => {
-  const closedOrders: number[] =  useMemo(() => [], []);
+const Statistics = ({ordersFeedData}: { ordersFeedData: TWebSocketOrdersResponse | null }): JSX.Element => {
+  const closedOrders: number[] =  [];
 
-  const processedOrders: number[] = useMemo(() => [], []);
+  const processedOrders: number[] = [];
 
   useMemo(() => {
     // eslint-disable-next-line
-    return data?.orders.filter((order) => {
+    return ordersFeedData?.orders.filter((order) => {
       if (order.status === 'done') {
         closedOrders.push(order.number)
       } else {
@@ -17,7 +17,7 @@ const Statistics = ({data}: { data: TWebSocketOrdersResponse | null }): JSX.Elem
       }
     })
   }, [
-    data,
+    ordersFeedData,
     processedOrders,
     closedOrders,
   ]);
@@ -62,7 +62,7 @@ const Statistics = ({data}: { data: TWebSocketOrdersResponse | null }): JSX.Elem
         </div>
         <div className={styles.total}>
           <p className="text text_type_digits-large">
-            {data?.total}
+            {ordersFeedData?.total}
           </p>
         </div>
       </div>
@@ -74,7 +74,7 @@ const Statistics = ({data}: { data: TWebSocketOrdersResponse | null }): JSX.Elem
         </div>
         <div className={styles.total}>
           <p className="text text_type_digits-large">
-            {data?.totalToday}
+            {ordersFeedData?.totalToday}
           </p>
         </div>
       </div>

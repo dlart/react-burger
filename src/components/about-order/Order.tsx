@@ -25,7 +25,7 @@ const Order = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(getOrderDetails(number))
-  }, []);
+  }, [dispatch, number]);
 
   const currentOrderInfo = order?.orders[0];
 

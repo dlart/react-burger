@@ -3,11 +3,11 @@ import styles from './order-list.module.css';
 import OrderListCard from '../order-list-card/OrderListCard';
 import {TWebSocketOrdersResponse} from '../../types/TWebSocketOrdersResponse';
 
-const OrderList = ({data}: { data: TWebSocketOrdersResponse | null }): JSX.Element => {
+const OrderList = ({ordersFeedData}: { ordersFeedData: TWebSocketOrdersResponse | null }): JSX.Element => {
   let sorted;
 
-  if (data?.orders !== undefined) {
-    sorted = [...data?.orders].sort((
+  if (ordersFeedData?.orders !== undefined) {
+    sorted = [...ordersFeedData?.orders].sort((
       a,
       b,
     ) => {
