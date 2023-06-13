@@ -17,6 +17,8 @@ const ProfileOrders = (): JSX.Element => {
     const executedRef = React.useRef(false);
 
     useEffect(() => {
+        dispatch(userOrdersDisconnect());
+
         if (!executedRef.current) {
             executedRef.current = true;
             dispatch(userOrdersConnect(WEB_SOCKET_BASE.USER_ORDERS + `?token=${token ?? ''}`));

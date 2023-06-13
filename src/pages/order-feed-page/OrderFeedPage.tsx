@@ -15,6 +15,8 @@ const OrderFeedPage = () => {
     const executedRef = React.useRef(false);
 
     useEffect(() => {
+        dispatch(ordersDisconnect());
+
         if (!executedRef.current) {
             executedRef.current = true;
             dispatch(ordersConnect(WEB_SOCKET_BASE.ORDERS));
