@@ -14,15 +14,8 @@ const ProfileOrders = (): JSX.Element => {
         .getItem('accessToken')
         ?.split('Bearer ')[1];
 
-    const executedRef = React.useRef(false);
-
     useEffect(() => {
-        dispatch(userOrdersDisconnect());
-
-        if (!executedRef.current) {
-            executedRef.current = true;
-            dispatch(userOrdersConnect(WEB_SOCKET_BASE.USER_ORDERS + `?token=${token ?? ''}`));
-        }
+        dispatch(userOrdersConnect(WEB_SOCKET_BASE.USER_ORDERS + `?token=${token ?? ''}`));
 
         return () => {
             dispatch(userOrdersDisconnect());

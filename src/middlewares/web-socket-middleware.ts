@@ -74,11 +74,10 @@ export const webSocketMiddleware = (wsActions: ActionTypes): Middleware => {
                 }
 
                 if (webSocketDisconnect.match(action)) {
-                    if (webSocket.readyState === 1) {
+                    if (webSocket) {
                         webSocket.close();
+                        webSocket = null;
                     }
-                    
-                    webSocket = null;
                 }
             }
 
