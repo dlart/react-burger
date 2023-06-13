@@ -1,0 +1,77 @@
+.link {
+    color: inherit;
+    display: block;
+    text-decoration: none;
+}
+
+.link:not(:last-child) {
+    margin: 0 0 16px 0;
+}
+
+.body {
+    background: #1C1C21;
+    border-radius: 40px;
+    cursor: pointer;
+    display: block;
+    min-width: 580px;
+    padding: 24px;
+    transition: .4s;
+    width: 100%;
+}
+
+.body:hover {
+    background: #32323a;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.head {
+    display: flex;
+    gap: 40px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status {
+    margin: 8px 0 0 0;
+}
+
+.bottom {
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ingredientsIcons {
+    display: flex;
+    align-items: center;
+}
+
+.ingredientsIconsCount {
+    margin: 0 0 0 10px;
+}
+
+.ingredientsIcons div:first-child {
+
+}
+
+.ingredientsIcons div:not(:first-child) {
+    margin: 0 0 0 -15px;
+}
+
+.statusDone {
+    color: #4C4CFF;
+}
+
+.statusPending {
+    color: #00CCCC;
+}
+
+.statusNew {
+    color: #FFFFFF;
+}

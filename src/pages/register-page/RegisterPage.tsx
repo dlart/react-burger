@@ -1,22 +1,17 @@
-import React, {useState, FC, SyntheticEvent} from 'react'
+import React, {FC, SyntheticEvent, useState} from 'react'
 import styles from './register-page.module.css'
-import {
-  Button,
-  EmailInput,
-  Input,
-  PasswordInput,
-} from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { register } from '../../services/actions/user';
+import {Button, EmailInput, Input, PasswordInput,} from '@ya.praktikum/react-developer-burger-ui-components';
+import {Link, useNavigate} from 'react-router-dom';
+import {registerUser} from '../../services/actions/user';
+import {useAppDispatch} from '../../hooks/useAppDispatch';
+import {useAppSelector} from '../../hooks/useAppSelector';
 
 const RegisterPage: FC = () => {
   const {
     registerRequestFailed,
     registerRequestSuccess
-  // @ts-ignore
-  } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -26,15 +21,14 @@ const RegisterPage: FC = () => {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
 
-    // @ts-ignore
-    dispatch(register(
+    dispatch(registerUser({
       email,
       password,
       name,
-    ))
+    }))
 
     if (registerRequestSuccess) {
-        navigate('/')
+      navigate('/')
     }
   }
 
@@ -45,9 +39,9 @@ const RegisterPage: FC = () => {
           Регистрация
         </div>
         {registerRequestFailed &&
-            <p className={styles.error}>
-                Ошибка регистрации
-            </p>
+          <p className={styles.error}>
+            Ошибка регистрации
+          </p>
         }
         <Input
           onChange={(event) => setName(event.target.value)}

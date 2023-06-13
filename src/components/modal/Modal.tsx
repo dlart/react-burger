@@ -7,22 +7,34 @@ import ModalOverlay from '../modal-overlay/ModalOverlay';
 const modalRoot = document.getElementById('modal-root') as Element;
 
 interface IModalProps {
-    onClose?: () => void | undefined | {};
-    title: string;
-    children: ReactNode;
+  children: ReactNode;
+  onClose?: () => void | undefined | {};
+  title: string;
 }
 
-const Modal: FC<IModalProps> = ({children, onClose, title}) => {
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if ('Escape' !== e.code) return;
+const Modal: FC<IModalProps> = ({
+  children,
+  onClose,
+  title,
+}) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if ('Escape' !== event.code) return;
+
     if (undefined !== onClose) {
-        onClose();
+      onClose();
     }
   }, [onClose]);
 
   useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener(
+      'keydown',
+      handleKeyDown,
+    );
+
+    return () => document.removeEventListener(
+      'keydown',
+      handleKeyDown,
+    );
   }, [handleKeyDown]);
 
   return createPortal(
@@ -41,7 +53,7 @@ const Modal: FC<IModalProps> = ({children, onClose, title}) => {
             onClick={onClose}
             type="button"
           >
-            <CloseIcon type="primary" />
+            <CloseIcon type="primary"/>
           </button>
         </div>
         <div className={styles.content}>

@@ -11,5 +11,4 @@ export interface IIngredient {
     price: number;
     proteins: number;
     type: 'bun' | 'main' | 'sauce';
-    count?: number;
 }

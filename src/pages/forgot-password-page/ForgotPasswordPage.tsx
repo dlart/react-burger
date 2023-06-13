@@ -1,12 +1,8 @@
-import React, {useState, FC, SyntheticEvent} from 'react'
+import React, {FC, SyntheticEvent, useState} from 'react'
 import styles from './forgot-password-page.module.css'
-import {
-  Button,
-  EmailInput,
-} from '@ya.praktikum/react-developer-burger-ui-components'
-import { Link } from 'react-router-dom'
-import api from '../../services/api';
-import { useNavigate } from 'react-router-dom'
+import {Button, EmailInput,} from '@ya.praktikum/react-developer-burger-ui-components'
+import {Link, useNavigate} from 'react-router-dom'
+import {resetPasswordRequest} from '../../utils/api';
 
 const ForgotPasswordPage: FC = () => {
   const navigate = useNavigate();
@@ -14,7 +10,7 @@ const ForgotPasswordPage: FC = () => {
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await api.passwordResetRequest(email);
+    await resetPasswordRequest(email);
     navigate('/reset-password');
   }
 

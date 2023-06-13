@@ -1,226 +1,276 @@
-export default class Api {
-  private readonly baseUrl: string;
+import {API} from '../constants';
+import {IRegisterRequest} from '../types/IRegisterRequest';
+import {IResetPasswordResetRequest} from '../types/IResetPasswordResetRequest';
+import {IUpdateUserRequest} from '../types/IUpdateUserRequest';
+import {TCreateOrderSuccessResponse} from '../types/TCreateOrderSuccessResponse';
+import {TIngredientsSuccessResponse} from '../types/TIngredientsSuccessResponse';
+import {TLoginRequest} from '../types/TLoginRequest';
+import {TLoginSuccessResponse} from '../types/TLoginSuccessResponse';
+import {TLogoutUserSuccessResponse} from '../types/TLogoutUserSuccessResponse';
+import {TOrderDetailsSuccessResponse} from '../types/TOrderDetailsSuccessResponse';
+import {TRefreshTokenSuccessResponse} from '../types/TRefreshTokenSuccessResponse';
+import {TRegisterUserSuccessResponse} from '../types/TRegisterUserSuccessResponse';
+import {TResetPasswordResetSuccessResponse} from '../types/TResetPasswordResetSuccessResponse';
+import {TResetPasswordSuccessResponse} from '../types/TResetPasswordSuccessResponse';
+import {TUpdateUserSuccessResponse} from '../types/TUpdateUserSuccessResponse';
 
-  constructor (baseUrl: string) {
-    this.baseUrl = baseUrl
-
-    this._checkResponse = this._checkResponse.bind(this);
-    this._request = this._request.bind(this);
-    this._requestWithToken = this._requestWithToken.bind(this);
-    this.createOrder = this.createOrder.bind(this);
-    this.getIngredients = this.getIngredients.bind(this);
-    this.getUser = this.getUser.bind(this);
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
-    this.passwordReset = this.passwordReset.bind(this);
-    this.passwordResetRequest = this.passwordResetRequest.bind(this);
-    this.refreshToken = this.refreshToken.bind(this);
-    this.register = this.register.bind(this);
-    this.updateUser = this.updateUser.bind(this);
-  }
-
-  _checkResponse <T>(response: Response): Promise<T> {
-    return response.ok
-      ? response.json()
-      : response
-        .json()
-        .then((error) => Promise.reject(error));
-  }
-
-  _request <T>(
-    url: string,
-    options: RequestInit,
-  ): Promise<T> {
-    return fetch(
-      url,
-      options,
-    )
-    .then(this._checkResponse<T>);
-  }
-  
-  async _requestWithToken <T>(
-    url: string,
-    options: RequestInit,
-  ): Promise<T> {
-    try {
-      const response = await fetch(url, options);
-      return await this._checkResponse(response);
-    } catch (error: any) {
-      if (error.message === "jwt expired") {
-        const refreshData = await this.refreshToken<{success: boolean, accessToken: string, refreshToken: string}>(localStorage.getItem('refreshToken') ?? '');
-        if (!refreshData.success) {
-          return Promise.reject(refreshData);
-        }
-        localStorage.setItem('accessToken', refreshData.accessToken);
-        localStorage.setItem('refreshToken', refreshData.refreshToken);
-        if (undefined === options.headers) {
-            options.headers = {};
-        }
-        options.headers = {
-            ...options.headers,
-            ...{Authorization: refreshData.accessToken}
-        };
-        const res = await fetch(url, options); //повторяем запрос
-        return await this._checkResponse(res);
-      } else {
-        return Promise.reject(error);
-      }
-    }
-  }
-
-  async createOrder (
-    ingredientsIds: number[],
-    token: string,
-  ) {
-    return this
-      ._requestWithToken(
-        `${this.baseUrl}/api/orders`,
-        {
-          body: JSON.stringify({ ingredients: ingredientsIds }),
-          headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json'
-          },
-          method: 'POST',
-        },
-      )
-      .then((result) => result);
-  }
-
-  async getIngredients () {
-    return this
-      ._request<{data: object}>(`${this.baseUrl}/api/ingredients`, {})
-      .then((result) => result.data);
-  }
-
-  async getUser(token: string): Promise<object> {
-    return this
-      ._requestWithToken<{user: object}>(
-        `${this.baseUrl}/api/auth/user`,
-        {
-          headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json',
-          },
-          method: 'GET',
-        },
-      )
-      .then((response) => response.user);
-  }
-
-  async login ({
-    email,
-    password,
-  }: {[name: string]: string}) {
-    return this
-      ._request(
-        `${this.baseUrl}/api/auth/login`,
-        {
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-        },
-      );
-  }
-
-  async logout (refreshToken: string): Promise<Response> {
-    return this
-      ._request(
-        `${this.baseUrl}/api/auth/logout`,
-        {
-          body: JSON.stringify({ token: refreshToken }),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-        },
-      );
-  }
-
-  async passwordReset ({
-    password,
-    token,
-  }: {password: string, token: string}): Promise<Response> {
-    return this
-      ._request(
-        `${this.baseUrl}/api/password-reset/reset`,
-        {
-          body: JSON.stringify({
-            password,
-            token,
-          }),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-        },
-      );
-  }
-
-  async passwordResetRequest (email: string): Promise<Response> {
-    return this
-      ._request(
-        `${this.baseUrl}/api/password-reset`,
-        {
-          body: JSON.stringify({ email: email }),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-        },
-      );
-  }
-  
-  async refreshToken <T>(refreshToken: string): Promise<T> {
-    return this
-      ._request(`${this.baseUrl}/api/auth/token`,
-        {
-          body: JSON.stringify({ token: refreshToken }),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-        },
-      );
-  }
-
-  async register ({
-    email,
-    name,
-    password,
-  }: {[name: string]: string}) {
-    return this
-      ._request(`${this.baseUrl}/api/auth/register`,
-        {
-          body: JSON.stringify({
-            email,
-            name,
-            password,
-          }),
-          headers: { 'Content-Type': 'application/json' },
-          method: 'POST',
-        },
-      );
-  }
-
-  async updateUser (
-    token: string,
-    {
-      email,
-      name,
-      password,
-    }: {[name: string]: string},
-  ) {
-    return this
-      ._requestWithToken(
-        `${this.baseUrl}/api/auth/user`,
-        {
-          body: JSON.stringify({
-            email,
-            name,
-            password,
-          }),
-          headers: {
-            'Authorization': token,
-            'Content-Type': 'application/json',
-          },
-          method: 'PATCH',
-        },
-      );
-  }
+export const checkResponse = <T>(res: Response): Promise<T> => {
+    return res.ok
+        ? res.json() as Promise<T>
+        : res.json().then((err) => Promise.reject(err));
 };
+
+export const refreshToken = () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+
+    return (
+        request<TRefreshTokenSuccessResponse>(API.AUTH.TOKEN, {
+            body: JSON.stringify({
+                token: refreshToken ?? '',
+            }),
+            method: 'POST',
+            headers: {'Content-Type': 'application/json;charset=utf-8'},
+        })
+    )
+};
+
+export const fetchWithRefresh = async (
+    url: string,
+    options: RequestInit,
+) => {
+    try {
+        return await request(
+            url,
+            options,
+        );
+    } catch (error: unknown) {
+        if ('jwt expired' === (error as Error).message) {
+            const refreshTokenResponse = await refreshToken();
+
+            if (!refreshTokenResponse.success) {
+                return Promise.reject(refreshTokenResponse);
+            }
+
+            localStorage.setItem(
+                'accessToken',
+                refreshTokenResponse.accessToken,
+            );
+
+            localStorage.setItem(
+                'refreshToken',
+                refreshTokenResponse.refreshToken,
+            );
+
+            const headers = new Headers(options.headers);
+
+            headers.set(
+                'Authorization',
+                refreshTokenResponse.accessToken,
+            );
+
+            return await request(
+                url,
+                {
+                    ...options,
+                    headers,
+                },
+            );
+        } else {
+            return Promise.reject(error);
+        }
+    }
+};
+
+export const request = <T>(
+    url: string,
+    options?: RequestInit,
+): Promise<T> => {
+    return fetch(
+        url,
+        options
+    )
+    .then(checkResponse<T>);
+}
+
+export const getIngredients = async (): Promise<TIngredientsSuccessResponse> => {
+    return await request(API.INGREDIENTS)
+}
+
+export const registerUser = async (data: IRegisterRequest) => {
+    return (
+        await request<TRegisterUserSuccessResponse>(
+            API.AUTH.REGISTER,
+            {
+                body: JSON.stringify({
+                    email: data.email,
+                    name: data.name,
+                    password: data.password,
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            },
+        )
+            .then((data: TRegisterUserSuccessResponse) => {
+                localStorage.setItem(
+                    'accessToken',
+                    data.accessToken,
+                );
+
+                localStorage.setItem(
+                    'refreshToken',
+                    data.refreshToken,
+                );
+
+                return data;
+            })
+    );
+};
+
+export const loginUser = async (data: TLoginRequest) => {
+    return (
+        await request<TLoginSuccessResponse>(
+            API.AUTH.LOGIN,
+            {
+                body: JSON.stringify({
+                    email: data.email,
+                    password: data.password,
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            }
+        )
+            .then((data: TLoginSuccessResponse) => {
+                localStorage.setItem(
+                    'accessToken',
+                    data.accessToken,
+                );
+
+                localStorage.setItem(
+                    'refreshToken',
+                    data.refreshToken,
+                );
+
+                return data;
+            })
+    )
+}
+
+export const resetPasswordRequest = async (email: string) => {
+    return (
+        await request<TResetPasswordSuccessResponse>(
+            API.PASSWORD_RESET.REQUEST,
+            {
+                body: JSON.stringify({email: email}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            },
+        )
+    )
+}
+
+export const resetPasswordReset = async (data: IResetPasswordResetRequest) => {
+    return (
+        await request<TResetPasswordResetSuccessResponse>(
+            API.PASSWORD_RESET.RESET,
+            {
+                body: JSON.stringify({
+                    password: data.password,
+                    token: data.token,
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            },
+        )
+    );
+}
+
+export const logoutUser = async () => {
+    return (
+        await request<TLogoutUserSuccessResponse>(
+            API.AUTH.LOGOUT,
+            {
+                body: JSON.stringify({token: localStorage.getItem('refreshToken')}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            },
+        ).then((response: TLogoutUserSuccessResponse) => {
+            if (response
+                && response.success
+            ) {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('refreshToken');
+            }
+        })
+    )
+};
+
+export const updateUser = async (data: IUpdateUserRequest) => {
+    const token = localStorage.getItem('accessToken');
+
+    return (
+        await request<TUpdateUserSuccessResponse>(
+            API.AUTH.USER,
+            {
+                body: JSON.stringify({
+                    email: data.email,
+                    name: data.name,
+                    password: data.password,
+                }),
+                headers: {
+                    'Authorization': token ?? '',
+                    'Content-Type': 'application/json',
+                },
+                method: 'PATCH',
+            },
+        )
+    )
+};
+
+export const createOrder = async (ingredientsIds: string[]) => {
+    const accessToken = localStorage.getItem('accessToken');
+
+    return (
+        await request<TCreateOrderSuccessResponse>(
+            API.ORDERS,
+            {
+                body: JSON.stringify({ingredients: ingredientsIds}),
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': accessToken ?? '',
+                    'Content-Type': 'application/json',
+                },
+                method: 'POST',
+            },
+        )
+    );
+};
+
+export const getOrderDetails = async (number: string) => {
+    return (
+        await request<TOrderDetailsSuccessResponse>(
+            API.ORDERS + `/${number}`,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                method: 'GET'
+            },
+        )
+    )
+}

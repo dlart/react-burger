@@ -3,91 +3,99 @@ import styles from './App.module.css';
 import AppHeader from '../app-header/AppHeader';
 import {Route, Routes, useLocation} from 'react-router-dom';
 import RoutingModal from '../routing-modal/RoutingModal';
-import BurgerConstructorPage from "../../pages/burger-constructor-page/BurgerConstructorPage";
-import LoginPage from "../../pages/login-page/LoginPage";
-import RegisterPage from "../../pages/register-page/RegisterPage";
-import ForgotPasswordPage from "../../pages/forgot-password-page/ForgotPasswordPage";
-import ResetPasswordPage from "../../pages/reset-password-page/ResetPasswordPage";
-import ProfilePage from "../../pages/profile-page/ProfilePage";
-import NotFoundPage from "../../pages/not-found-page/NotFoundPage";
-import OrderFeedPage from "../../pages/order-feed-page/OrderFeedPage";
-import {ProtectedRoute} from "../protected-route/ProtectedRoute";
-import {OnlyUnAuthRoute} from "../only-un-auth-route/OnlyUnAuthRoute";
-import { getIngredients } from "../../services/actions/ingredients";
-import {useDispatch, useSelector} from "react-redux";
+import BurgerConstructorPage from '../../pages/burger-constructor-page/BurgerConstructorPage';
+import LoginPage from '../../pages/login-page/LoginPage';
+import RegisterPage from '../../pages/register-page/RegisterPage';
+import ForgotPasswordPage from '../../pages/forgot-password-page/ForgotPasswordPage';
+import ResetPasswordPage from '../../pages/reset-password-page/ResetPasswordPage';
+import ProfilePage from '../../pages/profile-page/ProfilePage';
+import NotFoundPage from '../../pages/not-found-page/NotFoundPage';
+import OrderFeedPage from '../../pages/order-feed-page/OrderFeedPage';
+import {ProtectedRoute} from '../protected-route/ProtectedRoute';
+import {OnlyUnAuthRoute} from '../only-un-auth-route/OnlyUnAuthRoute';
+import {getIngredients} from '../../services/actions/ingredients';
 import IngredientPage from '../../pages/ingredient-page/IngredientPage';
-import {getUser} from "../../services/actions/user";
-import { ROUTES } from '../../constants';
+import {ROUTE} from '../../constants';
+import {useAppDispatch} from '../../hooks/useAppDispatch';
+import {useAppSelector} from '../../hooks/useAppSelector';
+import {RootState} from '../../services/store';
+import PageFeedDetail from '../../pages/page-feed-detail/PageFeedDetail';
+import {getUser} from '../../services/actions/user';
 
 const App: FC = () => {
-  const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-  // @ts-ignore
-  const { items } = useSelector((state) => state.ingredients);
+    React.useEffect(() => {
+        dispatch(getUser());
+        dispatch(getIngredients());
+    }, [dispatch]);
 
-  React.useEffect(() => {
-    // @ts-ignore
-    dispatch(getIngredients());
-    // @ts-ignore
-    dispatch(getUser());
-  }, [dispatch]);
+    const {items} = useAppSelector((state: RootState) => state.ingredients);
 
-  const location = useLocation();
-  const background = location.state?.background;
+    const location = useLocation();
 
-  return (
-    <div className={styles.page}>
-        <AppHeader />
-        <Routes location={background || location}>
-          <Route path={ROUTES.INDEX_ROUTE} element={<BurgerConstructorPage />} />
-          <Route path={ROUTES.LOGIN_ROUTE} element={(
-              <OnlyUnAuthRoute>
-                <LoginPage />
-              </OnlyUnAuthRoute>
-          )} />
-          <Route path={ROUTES.REGISTER_ROUTE} element={(
-              <OnlyUnAuthRoute>
-                  <RegisterPage />
-              </OnlyUnAuthRoute>
-          )} />
-          <Route path={ROUTES.FORGOT_PASSWORD_ROUTE} element={(
-              <OnlyUnAuthRoute>
-                <ForgotPasswordPage />
-              </OnlyUnAuthRoute>
-          )} />
-          <Route path={ROUTES.RESET_PASSWORD_ROUTE} element={(
-              <OnlyUnAuthRoute>
-                <ResetPasswordPage />
-              </OnlyUnAuthRoute>
-          )} />
-          <Route
-              element={(
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              )}
-              path={ROUTES.PROFILE_ROUTE}
-          />
-          <Route
-              element={items.length && <IngredientPage />}
-              path={ROUTES.INGREDIENT_ROUTE}
-          />
-          <Route
-            element={(
-              <ProtectedRoute>
-                <OrderFeedPage />
-              </ProtectedRoute>
-            )}
-            path={ROUTES.ORDER_FEED_ROUTE}
-          />
-          <Route
-              path="*"
-              element={<NotFoundPage />}
-          />
-        </Routes>
-        <RoutingModal />
-    </div>
-  );
+    const background = location.state?.background;
+
+    return (
+        <div className={styles.page}>
+            <AppHeader/>
+            <Routes location={background || location}>
+                <Route path={ROUTE.INDEX} element={<BurgerConstructorPage/>}/>
+                <Route path={ROUTE.LOGIN} element={(
+                    <OnlyUnAuthRoute>
+                        <LoginPage/>
+                    </OnlyUnAuthRoute>
+                )}/>
+                <Route path={ROUTE.REGISTER} element={(
+                    <OnlyUnAuthRoute>
+                        <RegisterPage/>
+                    </OnlyUnAuthRoute>
+                )}/>
+                <Route path={ROUTE.FORGOT_PASSWORD} element={(
+                    <OnlyUnAuthRoute>
+                        <ForgotPasswordPage/>
+                    </OnlyUnAuthRoute>
+                )}/>
+                <Route path={ROUTE.RESET_PASSWORD} element={(
+                    <OnlyUnAuthRoute>
+                        <ResetPasswordPage/>
+                    </OnlyUnAuthRoute>
+                )}/>
+                <Route
+                    path={ROUTE.PROFILE}
+                    element={(
+                        <ProtectedRoute>
+                            <ProfilePage />
+                        </ProtectedRoute>
+                    )}
+                >
+                    <Route
+                        element={<ProfilePage/>}
+                        path={ROUTE.USER_ORDERS}
+                    />
+                    <Route
+                        element={<PageFeedDetail/>}
+                        path={ROUTE.USER_ORDER_DETAIL}
+                    />
+                </Route>
+                <Route
+                    element={items.length && <IngredientPage/>}
+                    path={ROUTE.INGREDIENT}
+                />
+                <Route
+                    element={(
+                        <OrderFeedPage/>
+                    )}
+                    path={ROUTE.ORDER_FEED}
+                />
+                <Route
+                    element={<NotFoundPage/>}
+                    path="*"
+                />
+            </Routes>
+            <RoutingModal/>
+        </div>
+    );
 }
 
 export default App;

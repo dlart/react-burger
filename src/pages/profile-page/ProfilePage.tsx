@@ -1,98 +1,23 @@
-import React, {useEffect, useMemo, useState, FC, SyntheticEvent, ChangeEvent} from 'react'
+import React, {FC} from 'react'
 import styles from './profile-page.module.css'
-import {
-  NavLink,
-  useNavigate,
-} from 'react-router-dom'
-import {
-  Button,
-  EmailInput,
-  Input,
-  PasswordInput,
-} from '@ya.praktikum/react-developer-burger-ui-components'
-import {
-  useDispatch,
-  useSelector,
-} from 'react-redux'
-import { logout } from '../../services/actions/user'
-import { updateUser } from '../../services/actions/user'
+import {NavLink, useLocation, useNavigate,} from 'react-router-dom'
+import {logoutUser} from '../../services/actions/user'
+import {useAppDispatch} from '../../hooks/useAppDispatch';
+import {ROUTE} from '../../constants';
+import ProfileForm from '../../components/profile-form/ProfileForm';
+import ProfileOrders from '../profile-orders/ProfileOrders';
 
 const ProfilePage: FC = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  
-  const {
-    email,
-    name,
-    password,
-  // @ts-ignore
-  } = useSelector(state => state.user.user);
-  
-  const [form, setForm] = useState({
-    email,
-    name,
-    password,
-  });
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    setForm({
-      name,
-      email,
-      password,
-    });
-  }, [dispatch, name, email, password]);
-  
-  function onFormChange(event: ChangeEvent<{name: string, value: string}>): void {
-    const fieldName = event
-      .target
-      .name;
-    const fieldValue = event
-      .target
-      .value;
-    
-    setForm({
-      ...form,
-      [fieldName]: fieldValue,
-    });
-  }
-  
-  const isChanged = useMemo(() => {
-    return email !== form.email
-      || name !== form.name
-      || password !== form.password;
-  }, [
-    email,
-    form,
-    name,
-    password,
-  ]);
-  
-  function onReset(event: SyntheticEvent): void {
-    event.preventDefault();
-    
-    setForm({
-      email,
-      name,
-      password,
-    });
-  }
+  const navigate = useNavigate();
+
+  const {pathname} = useLocation();
 
   const handleLogout = (): void => {
-    /** @ts-ignore */
-    dispatch(logout());
+    dispatch(logoutUser());
     
     navigate('/login');
-  };
-
-  const handleSubmit = (event: SyntheticEvent) => {
-    event.preventDefault();
-
-    /** @ts-ignore */
-    dispatch(updateUser({
-      email: form.email,
-      name: form.name,
-      password: form.password
-    }));
   };
 
   return (
@@ -108,7 +33,10 @@ const ProfilePage: FC = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/profile">
+            <NavLink
+              to={'/profile/orders'}
+              className={(({isActive}) => isActive ? styles.active : undefined)}
+            >
               История заказов
             </NavLink>
           </li>
@@ -122,54 +50,16 @@ const ProfilePage: FC = () => {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </section>
-      <section className={styles.form}>
-        <form
-          className={styles.form}
-          onSubmit={handleSubmit}
-        >
-          <Input
-            onChange={onFormChange}
-            name={'name'}
-            icon="EditIcon"
-            placeholder="Имя"
-            value={form.name}
-          />
-          <EmailInput
-            name={'email'}
-            placeholder="Логин"
-            /** @ts-ignore */
-            icon="EditIcon"
-            onChange={onFormChange}
-            value={form.email}
-          />
-          <PasswordInput
-            onChange={onFormChange}
-            name={'password'}
-            icon="EditIcon"
-            value={form.password}
-          />
-          <Button
-            htmlType="submit"
-            size="medium"
-            type="primary"
-          >
-            Сохранить
-          </Button>
-          {
-            isChanged
-            ? (
-                <Button
-                  htmlType={'button'}
-                  onClick={onReset}
-                  size="large"
-                  type="secondary"
-                >
-                  Отмена
-                </Button>
-            )
-            : null
-          }
-        </form>
+      <section>
+        {pathname.split(`${ROUTE.USER_ORDERS}/`)[1] !== undefined ? (
+          <p>AboutOrder</p>
+        ) : (
+          <>
+            <div className={styles.content}>
+              {pathname === ROUTE.PROFILE ? <ProfileForm /> : <ProfileOrders/>}
+            </div>
+          </>
+        )}
       </section>
     </main>
   );

@@ -1,0 +1,83 @@
+.body {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    max-width: 640px;
+    width: 100%;
+}
+
+.blockInner::-webkit-scrollbar {
+    width: 12px;
+}
+
+.blockInner::-webkit-scrollbar-track {
+    background: #2F2F37;
+}
+
+.blockInner::-webkit-scrollbar-thumb {
+    background: #8585AD;
+}
+
+.blockInnerItem {
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    max-width: 628px;
+    padding: 0 24px 0 0;
+    width: 100%;
+}
+
+.blockInnerItem:not(:last-child) {
+    margin: 0 0 16px 0;
+}
+
+.number {
+    text-align: center;
+    margin: 0 0 40px 0;
+}
+
+.name {
+    margin: 0 0 58px 0;
+}
+
+.status {
+    margin: 12px 0 0 0;
+}
+
+.block {
+    margin: 0 0 40px 0;
+}
+
+.blockInner {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.counter {
+    display: flex;
+    gap: 5px;
+    margin-left: auto;
+}
+
+.footer {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statusDone {
+    color: #00CCCC;
+}
+
+.statusPending {
+    color: #6400b0;
+}
+
+.statusNew {
+    color: #6c2626;
+}
+
+.sum {
+    padding: 0 35px 0 0;
+}

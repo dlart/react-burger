@@ -1,23 +1,22 @@
-import React, { useState, FC, SyntheticEvent } from 'react'
+import React, {FC, SyntheticEvent, useState} from 'react'
 import styles from './reset-password-page.module.css'
-import {
-  Button,
-  Input,
-  PasswordInput,
-} from '@ya.praktikum/react-developer-burger-ui-components'
-import api from '../../services/api'
-import { Link } from 'react-router-dom'
+import {Button, Input, PasswordInput,} from '@ya.praktikum/react-developer-burger-ui-components'
+import {Link, useNavigate} from 'react-router-dom'
+import {resetPasswordReset} from '../../utils/api';
 
 const ResetPasswordPage: FC = () => {
+  const navigate = useNavigate();
+
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    await api.passwordReset({
+    await resetPasswordReset({
       password,
       token,
     });
+    navigate('/login', { replace: true });
   }
 
   return (
