@@ -39,7 +39,9 @@ export const webSocketMiddleware = (wsActions: ActionTypes): Middleware => {
             } = wsActions;
 
             if (webSocketConnect.match(action)) {
-                webSocket = new WebSocket(action.payload);
+                if (null === webSocket) {
+                    webSocket = new WebSocket(action.payload);
+                }
                 
                 dispatch(webSocketConnecting());
             }
@@ -64,6 +66,7 @@ export const webSocketMiddleware = (wsActions: ActionTypes): Middleware => {
 
                 webSocket.onclose = () => {
                     dispatch(webSocketClose());
+                    webSocket = null;
                 };
 
                 if (webSocketSendMessage?.match(action)) {
