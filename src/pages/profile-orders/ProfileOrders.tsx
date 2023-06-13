@@ -4,7 +4,6 @@ import {useAppSelector} from '../../hooks/useAppSelector';
 import {useAppDispatch} from '../../hooks/useAppDispatch';
 import {userOrdersConnect, userOrdersDisconnect} from '../../services/actions/userOrders';
 import {WEB_SOCKET_BASE} from '../../constants';
-import {ordersConnect} from "../../services/actions/orders";
 
 const ProfileOrders = (): JSX.Element => {
     const dispatch = useAppDispatch();

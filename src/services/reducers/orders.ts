@@ -9,13 +9,13 @@ import {
     ordersWebSocketOpen,
 } from '../actions/orders';
 
-interface IUserOrdersState {
+interface IOrdersState {
     connectingError: string;
     orders: TWebSocketOrdersResponse | null;
     status: WebSocketStatus;
 }
 
-const initialState: IUserOrdersState = {
+const initialState: IOrdersState = {
     connectingError: '',
     orders: null,
     status: WebSocketStatus.OFFLINE,
