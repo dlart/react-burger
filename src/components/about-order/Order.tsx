@@ -65,7 +65,7 @@ const Order = (): JSX.Element => {
   return (
     <div className={styles.body}>
       <div className={styles.number}>
-        <p className="text text_type_digits-default">
+        <p className="text text_type_digits-default" data-testid="order-number">
           # {number}
         </p>
       </div>

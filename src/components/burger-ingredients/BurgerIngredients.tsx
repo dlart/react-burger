@@ -68,7 +68,10 @@ const BurgerIngredients: FC = () => {
 
   return (
     <>
-      <h2 className="pt-10 text text_type_main-large">
+      <h2
+          className="pt-10 text text_type_main-large"
+          data-testid="constructor-title"
+      >
           Соберите бургер
       </h2>
       <nav className={`${styles.tabs} mt-5`}>

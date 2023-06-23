@@ -65,7 +65,7 @@ const slice = createSlice({
         state => {
           state.request = true;
           state.requestFailed = false;
-          state.requestSuccess = true;
+          state.requestSuccess = false;
         },
       )
       .addCase(
@@ -80,6 +80,7 @@ const slice = createSlice({
           }));
           state.request = false;
           state.requestFailed = false;
+          state.requestSuccess = true;
         },
       )
       .addCase(
@@ -87,6 +88,7 @@ const slice = createSlice({
         state => {
           state.request = false;
           state.requestFailed = true;
+          state.requestSuccess = false;
         },
       )
   },

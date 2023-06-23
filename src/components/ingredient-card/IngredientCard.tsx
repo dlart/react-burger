@@ -46,14 +46,19 @@ const IngredientCard: FC<IngredientCardProps> = ({
           className={styles.ingredient}
           onClick={onClick}
           ref={ref}
+          data-testid={ingredient._id + '-ingredient-card'}
           style={{opacity}}
         >
           <Link
             className={styles.link}
             state={{background: location}}
             to={{pathname: `/ingredients/${ingredient._id}`}}
+            data-testid={ingredient._id}
           >
-            <Counter count={Number(ingredient.count)}/>
+            <Counter
+                count={Number(ingredient.count)}
+                data-testid={ingredient._id + '-count'}
+            />
             <img
               alt={ingredient.name}
               className="ml-4 mr-4"

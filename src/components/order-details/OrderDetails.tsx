@@ -8,7 +8,7 @@ interface OrderDetailsProps {
 const OrderDetails: FC<OrderDetailsProps> = ({id}) => {
   return (
     <>
-      <div className="text text_type_digits-large">
+      <div className="text text_type_digits-large" data-testid="modal-order-number">
         {id}
       </div>
       <div className="mt-8 text text_type_main-medium">

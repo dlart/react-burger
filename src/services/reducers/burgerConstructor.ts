@@ -41,24 +41,13 @@ const reducers = {
     state
       .ingredients
       .splice(
-          action
-              .payload
-              .oldIndex,
-          1,
-      )
-      .shift();
-
-    state
-      .ingredients
-      .splice(
-        action
-            .payload
-            .newIndex,
+        action.payload.newIndex,
         0,
+        state.ingredients.splice(
+          action.payload.oldIndex,
+          1,
+        )[0],
       );
-  },
-  resetIngredients(state: IBurgerConstructorState) {
-    state.ingredients = [];
   },
   setBun(
       state: IBurgerConstructorState,
