@@ -45,11 +45,15 @@ const Modal: FC<IModalProps> = ({
         onKeyDown={handleKeyDown}
       >
         <div className={styles.title}>
-          <div className="text text_type_main-large">
+          <div
+              className="text text_type_main-large"
+              data-testid="modal-title"
+          >
             {title}
           </div>
           <button
             className={styles.closeBtn}
+            data-testid="modal-close-button"
             onClick={onClose}
             type="button"
           >

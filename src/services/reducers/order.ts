@@ -10,7 +10,7 @@ interface IOrderState {
   requestSuccess: boolean;
 }
 
-const initialState: IOrderState = {
+export const initialState: IOrderState = {
   modalOpen: false,
   number: null,
   request: false,

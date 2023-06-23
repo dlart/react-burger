@@ -64,9 +64,10 @@ const BurgerConstructor: FC = () => {
         if (null !== bun) {
             dispatch(decreaseCount(bun._id));
             dispatch(decreaseCount(bun._id));
-            dispatch(increaseCount(newBun._id));
-            dispatch(increaseCount(newBun._id));
         }
+
+        dispatch(increaseCount(newBun._id));
+        dispatch(increaseCount(newBun._id));
     };
 
     const [
@@ -91,9 +92,10 @@ const BurgerConstructor: FC = () => {
             if (null !== bun) {
                 dispatch(decreaseCount(bun._id));
                 dispatch(decreaseCount(bun._id));
-                dispatch(increaseCount(newBunItem._id));
-                dispatch(increaseCount(newBunItem._id));
             }
+
+            dispatch(increaseCount(newBunItem._id));
+            dispatch(increaseCount(newBunItem._id));
         },
     });
 
@@ -120,6 +122,7 @@ const BurgerConstructor: FC = () => {
                 <div
                     className={`${styles.bunPlaceholder} ${null !== bun ? styles.bunPlaceholderFilled : null} constructor-element constructor-element_pos_top ml-6`}
                     ref={dropTopBunTarget}
+                    data-testid="top-bun-drop-target"
                     style={topBunStyle}
                 >
                     {null !== bun
@@ -139,7 +142,10 @@ const BurgerConstructor: FC = () => {
                         )
                     }
                 </div>
-                <div ref={dropIngredientTarget}>
+                <div
+                    ref={dropIngredientTarget}
+                    data-testid="ingredient-drop-target"
+                >
                     {0 < ingredients.length
                         ? (
                             <ul className="mt-4">
@@ -171,6 +177,7 @@ const BurgerConstructor: FC = () => {
                 <div
                     className={`${styles.bunPlaceholder} ${null !== bun ? styles.bunPlaceholderFilled : null} constructor-element constructor-element_pos_bottom ml-6`}
                     ref={dropBottomBunTarget}
+                    data-testid="bottom-bun-drop-target"
                     style={bottomBunStyle as CSSProperties}
                 >
                     {null !== bun
@@ -203,6 +210,7 @@ const BurgerConstructor: FC = () => {
                         onClick={handlerCreateOrder}
                         size="large"
                         type="primary"
+                        data-testid="order-button"
                     >
                         Оформить заказ
                     </Button>

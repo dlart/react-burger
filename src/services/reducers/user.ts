@@ -31,7 +31,7 @@ interface IUserState {
   user: TProfileUser | null;
 }
 
-const initialState: IUserState = {
+export const initialState: IUserState = {
   isLoggedIn: false,
   loginRequest: false,
   loginRequestFailed: false,
@@ -106,7 +106,7 @@ const user = createSlice({
         state => {
           state.updateRequest = true;
           state.updateRequestFailed = false;
-          state.updateRequestSuccess = true;
+          state.updateRequestSuccess = false;
         },
       )
       .addCase(

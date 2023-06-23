@@ -8,7 +8,7 @@ interface IOrderDetailDataState {
     error: string | null | undefined,
 }
 
-const initialState: IOrderDetailDataState = {
+export const initialState: IOrderDetailDataState = {
     order: null,
     loading: false,
     error: null,
