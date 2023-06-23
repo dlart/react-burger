@@ -1,3 +1,5 @@
+const ingredientTestId = '[data-testid="643d69a5c3f7b9001cfa093c"]';
+
 describe('burger constructor test', () => {
   beforeEach(() => {
     cy.intercept(
@@ -26,7 +28,7 @@ describe('burger constructor test', () => {
       JSON.stringify('refreshToken')
     );
     
-    cy.visit('http://localhost:3000/');
+    cy.visit('/');
     
     cy.intercept(
       'GET',
@@ -36,7 +38,7 @@ describe('burger constructor test', () => {
   });
   
   it('should handle ingredient modal', () => {
-    cy.get('[data-testid="643d69a5c3f7b9001cfa093c"]').click();
+    cy.get(ingredientTestId).click();
     
     cy.get('[data-testid="modal-title"]').should(
       'have.text',
@@ -52,7 +54,7 @@ describe('burger constructor test', () => {
   });
   
   it('should handle drag and drop and order', () => {
-    cy.get('[data-testid="643d69a5c3f7b9001cfa093c"]').trigger('dragstart');
+    cy.get(ingredientTestId).trigger('dragstart');
     
     cy.get('[data-testid="top-bun-drop-target"]').trigger('drop');
     
@@ -61,13 +63,17 @@ describe('burger constructor test', () => {
       '2',
     );
     
-    cy.get('[data-testid="643d69a5c3f7b9001cfa0941"]').trigger('dragstart');
+    const anotherIngredientTestId = '[data-testid="643d69a5c3f7b9001cfa0941"]';
     
-    cy.get('[data-testid="ingredient-drop-target"]').trigger('drop');
+    cy.get(anotherIngredientTestId).trigger('dragstart');
     
-    cy.get('[data-testid="643d69a5c3f7b9001cfa0941"]').trigger('dragstart');
+    const ingredientDropTarget = '[data-testid="ingredient-drop-target"]';
     
-    cy.get('[data-testid="ingredient-drop-target"]').trigger('drop');
+    cy.get(ingredientDropTarget).trigger('drop');
+    
+    cy.get(anotherIngredientTestId).trigger('dragstart');
+    
+    cy.get(ingredientDropTarget).trigger('drop');
     
     cy.get('[data-testid="643d69a5c3f7b9001cfa0941-ingredient-card"] .counter__num').should(
       'have.text',
@@ -78,7 +84,7 @@ describe('burger constructor test', () => {
     
     cy.get('[data-testid="bottom-bun-drop-target"]').contains('Краторная булка N-200i');
     
-    cy.get('[data-testid="ingredient-drop-target"]').contains('Биокотлета из марсианской Магнолии');
+    cy.get(ingredientDropTarget).contains('Биокотлета из марсианской Магнолии');
     
     cy.get('[data-testid="order-button"]').click();
     

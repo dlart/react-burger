@@ -10,7 +10,7 @@ interface IIngredientsState {
   requestSuccess: boolean,
 }
 
-const initialState: IIngredientsState = {
+export const initialState: IIngredientsState = {
   items: [],
   request: false,
   requestFailed: false,

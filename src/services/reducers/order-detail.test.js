@@ -1,12 +1,9 @@
 import reducer from './order-detail';
 import { getOrderDetails } from '../actions/orderDetail';
+import { initialState as baseInitialState } from './order-detail';
 
 describe('order detail test', () => {
-  let initialState = {
-    order: null,
-    loading: false,
-    error: null,
-  };
+  let initialState = baseInitialState;
   
   it('should handle pending', () => {
     const action = {

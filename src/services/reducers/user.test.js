@@ -1,37 +1,8 @@
 import reducer from './user';
 import { getUser, loginUser, logoutUser, resetPasswordRequest, resetPasswordReset, updateUser } from '../actions/user'
-import { getIngredients } from '../actions/ingredients'
+import { initialState } from './user';
 
 describe('user test', () => {
-  const initialState = {
-    isLoggedIn: false,
-    loginRequest: false,
-    loginRequestFailed: false,
-    loginRequestSuccess: false,
-    logoutRequest: false,
-    logoutRequestFailed: false,
-    logoutRequestSuccess: false,
-    refreshTokenRequest: false,
-    refreshTokenRequestFailed: false,
-    refreshTokenRequestSuccess: false,
-    registerRequest: false,
-    registerRequestFailed: false,
-    registerRequestSuccess: false,
-    request: false,
-    requestFailed: false,
-    requestSuccess: false,
-    updateRequest: false,
-    updateRequestFailed: false,
-    updateRequestSuccess: false,
-    user: null,
-    resetPasswordRequest: false,
-    resetPasswordRequestFailed: false,
-    resetPasswordRequestSuccess: false,
-    resetPasswordResetRequest: false,
-    resetPasswordResetRequestFailed: false,
-    resetPasswordResetRequestSuccess: false,
-  };
-  
   // getUser
   
   it('should handle get user pending', () => {

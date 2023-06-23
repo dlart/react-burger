@@ -1,4 +1,4 @@
-export const API_BASE = 'https://norma.nomoreparties.space';
+export const API_BASE: string = 'https://norma.nomoreparties.space';
 
 export const API = {
   AUTH: {
@@ -16,13 +16,13 @@ export const API = {
   },
 };
 
-export const INGREDIENT = {
+export const INGREDIENT: { [key: string]: string; } = {
   BUN: 'bun',
   MAIN: 'main',
   SAUCE: 'sauce',
 };
 
-export const ROUTE = {
+export const ROUTE: { [key: string]: string; } = {
   FORGOT_PASSWORD: '/forgot-password',
   INDEX: '/',
   INGREDIENT: '/ingredients/:id',
@@ -36,7 +36,7 @@ export const ROUTE = {
   RESET_PASSWORD: '/reset-password',
 };
 
-export const WEB_SOCKET_BASE = {
+export const WEB_SOCKET_BASE: { [key: string]: string; } = {
   ORDERS: 'wss://norma.nomoreparties.space/orders/all',
   USER_ORDERS: 'wss://norma.nomoreparties.space/orders',
-}
+};

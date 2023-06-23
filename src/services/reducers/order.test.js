@@ -2,15 +2,10 @@ import { createOrder } from '../actions/order';
 import reducer from './order';
 import { openModal } from './order'
 import { closeModal } from './order'
+import { initialState as baseInitialState } from './order';
 
 describe('order test', () => {
-  let initialState = {
-    modalOpen: false,
-    number: null,
-    request: false,
-    requestFailed: false,
-    requestSuccess: false,
-  };
+  let initialState = baseInitialState;
   
   it('should handle pending', () => {
     const action = {

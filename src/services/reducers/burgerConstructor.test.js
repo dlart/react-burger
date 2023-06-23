@@ -1,12 +1,8 @@
 import reducer, { addIngredient, deleteIngredient, moveIngredient, setBun } from './burgerConstructor'
+import { initialState } from './burgerConstructor';
 
 describe('burger constructor test', () => {
   it('should set bun', () => {
-    const initialState = {
-      bun: null,
-      ingredients: [],
-    };
-    
     const action = {
       type: setBun,
       payload: {

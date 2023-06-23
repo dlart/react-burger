@@ -15,7 +15,7 @@ interface IOrdersState {
     status: WebSocketStatus;
 }
 
-const initialState: IOrdersState = {
+export const initialState: IOrdersState = {
     connectingError: '',
     orders: null,
     status: WebSocketStatus.OFFLINE,

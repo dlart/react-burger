@@ -31,7 +31,7 @@ interface IUserState {
   user: TProfileUser | null;
 }
 
-const initialState: IUserState = {
+export const initialState: IUserState = {
   isLoggedIn: false,
   loginRequest: false,
   loginRequestFailed: false,

@@ -7,14 +7,9 @@ import {
   userOrdersWebSocketOpen,
 } from '../actions/userOrders';
 import reducer from './userOrders';
+import { initialState } from './userOrders';
 
 describe('user orders test', () => {
-  const initialState = {
-    connectingError: '',
-    orders: null,
-    status: WebSocketStatus.OFFLINE,
-  };
-  
   it('should handle web socket close', () => {
     const action = {
       type: userOrdersWebSocketClose,

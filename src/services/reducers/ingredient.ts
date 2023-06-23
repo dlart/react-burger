@@ -9,7 +9,7 @@ interface IIngredientState {
   modalOpen: boolean,
 }
 
-const initialState: IIngredientState = {
+export const initialState: IIngredientState = {
   item: null,
   modalOpen: false,
 };
